@@ -4,7 +4,7 @@ const PLAYER_MAX_SPEED : float = 250.0
 const PLAYER_ACCELERATION : float = 0.2
 const PLAYER_DECELERATION : float = 0.1
 const PLAYER_TURN_SPEED : float = 15.0
-const PRIMARY_FIRE_CD : float = 0.05
+const PRIMARY_FIRE_CD : float = 0.1
 
 var current_velocity : Vector2
 var movement_vector : Vector2
@@ -58,7 +58,7 @@ func process_rotation(delta):
     
     # This calculates the desired angle based on joystick/cursor position, as
     # well as the shortest route to achieve that angle
-    var desired_angle = int(rad2deg(atan2(current_aim.y, current_aim.x)))
+    var desired_angle = int(rad2deg(current_aim.angle()))
     var current_angle = int(global_rotation_degrees)
     var difference = (desired_angle - current_angle + 540) % 360 - 180
       
@@ -70,9 +70,10 @@ func process_rotation(delta):
         global_rotation += PLAYER_TURN_SPEED*delta
 
 func clamp_position():
-    var screen_size = get_viewport().size
-    global_position.x = clamp(global_position.x, 0, screen_size.x)
-    global_position.y = clamp(global_position.y, 0, screen_size.y)
+    var screen_size_x = ProjectSettings.get_setting("display/window/size/width")
+    var screen_size_y = ProjectSettings.get_setting("display/window/size/height")
+    global_position.x = clamp(global_position.x, 0, screen_size_x)
+    global_position.y = clamp(global_position.y, 0, screen_size_y)
     
 # Helpers
 func get_movement_vector() -> Vector2:
@@ -118,4 +119,6 @@ func action_primary_fire():
     pf_timer.start(PRIMARY_FIRE_CD)
 
 func self_destruct():
-    get_parent().remove_child(self)
+    var parent = get_parent()
+    if parent != null:
+        parent.remove_child(self)

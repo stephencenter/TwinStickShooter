@@ -1,7 +1,8 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=4 format=2]
 
 [ext_resource path="res://Fonts/hud_font.tres" type="DynamicFont" id=1]
 [ext_resource path="res://Scripts/World.gd" type="Script" id=2]
+[ext_resource path="res://Fonts/hud_font_small.tres" type="DynamicFont" id=3]
 
 [node name="World" type="Node2D"]
 script = ExtResource( 2 )
@@ -20,12 +21,26 @@ __meta__ = {
 }
 
 [node name="ElapsedTime" type="Label" parent="CanvasLayer"]
-margin_left = 1292.0
-margin_right = 1366.0
-margin_bottom = 30.0
+anchor_top = -0.00185185
+anchor_bottom = -0.00185185
+margin_left = 1816.0
+margin_top = 2.0
+margin_right = 1914.0
+margin_bottom = 41.0
 grow_horizontal = 0
 custom_fonts/font = ExtResource( 1 )
 text = "TIME:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Framerate" type="Label" parent="CanvasLayer"]
+margin_left = 4.0
+margin_top = 1058.0
+margin_right = 76.0
+margin_bottom = 1080.0
+custom_fonts/font = ExtResource( 3 )
+text = "60 FPS"
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -34,6 +49,9 @@ __meta__ = {
 one_shot = true
 
 [node name="AlivePointsTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="DifficultyTimer" type="Timer" parent="."]
 one_shot = true
 
 [node name="EnemyContainer" type="Node" parent="."]

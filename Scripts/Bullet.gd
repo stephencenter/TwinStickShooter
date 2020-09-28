@@ -1,6 +1,6 @@
 extends Node2D
 
-const BULLET_TRAVEL_SPEED : float = 20.0
+const BULLET_TRAVEL_SPEED : float = 800.0
 const BULLET_LIFESPAN : float = 5.0
 const BULLET_DAMAGE : int = 1
 
@@ -13,8 +13,8 @@ var current_velocity : Vector2
 func _ready():
     lifespan_timer.start(BULLET_LIFESPAN)
 
-func _process(_delta):
-    global_position += current_velocity
+func _process(delta):
+    global_position += current_velocity*delta
     attempt_damage_enemies()
     
     if lifespan_timer.time_left == 0:
@@ -35,4 +35,6 @@ func attempt_damage_enemies():
         self_destruct()
 
 func self_destruct():
-    get_parent().remove_child(self)
+    var parent = get_parent()
+    if parent != null:
+        parent.remove_child(self)
