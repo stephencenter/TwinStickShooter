@@ -28,7 +28,6 @@ func take_damage_from_player(damage_amount : int):
         self_destruct()
 
 func attempt_damage_player():
-    return
     for area in hitbox.get_overlapping_areas():
         if area.get_parent() == the_world.get_node("Player"):
             var player = area.get_parent()

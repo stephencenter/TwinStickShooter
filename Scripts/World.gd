@@ -1,15 +1,21 @@
 extends Node2D
 
-# Constants
-const TIME_BETWEEN_SPAWNS : float = 0.5
-const TIME_BETWEEN_POINTS : float = 1.0/45.0
+# Constants (points)
+const TIME_BETWEEN_POINTS : float = 1/45.0
 const POINTS_PER_TICK : int = 10
 const POINTS_PER_ENEMY : int = 1000
+
+# Constants (difficulty)
+const BASE_TIME_BETWEEN_SPAWNS : float = 1.0
+const MIN_TIME_BETWEEN_SPAWNS : float = 0.2
+const TIME_FOR_MAX_DIFFICULTY : float = 120.0
 
 # Variables
 var current_score : int = 0
 var start_time : int = 0
 var current_time : int = 0
+var time_between_spawns : float = BASE_TIME_BETWEEN_SPAWNS
+var challenge_count : int = 0
 
 # Nodes
 onready var spawn_timer : Timer = $EnemySpawnTimer
@@ -22,19 +28,20 @@ onready var player_scene = load("res://Scenes/Player.tscn")
 func _ready():
     start_new_game()
 
-func _process(_delta):
+func _process(delta):
     if has_node("Player"):
         if spawn_timer.time_left == 0:
             spawn_enemy()
-            spawn_timer.start(TIME_BETWEEN_SPAWNS)
+            spawn_timer.start(time_between_spawns)
         
         current_time = OS.get_unix_time()
         reward_alive_points()
+        increase_difficulty(delta)
             
     else:
         if Input.is_action_just_pressed("new_game"):
             start_new_game()
-    
+            
     update_hud()
 
 func update_hud():
@@ -65,7 +72,7 @@ func start_new_game():
     start_time = OS.get_unix_time()
     
     # Start spawning enemies
-    spawn_timer.start(TIME_BETWEEN_SPAWNS)
+    spawn_timer.start(time_between_spawns)
     
 # Enemy spawner
 func get_random_spawnpoint(chosen_side : String) -> Vector2:
@@ -130,3 +137,29 @@ func reward_alive_points():
         
 func reward_enemy_points():
     current_score += POINTS_PER_ENEMY
+    
+func increase_difficulty(delta):
+    if time_between_spawns > MIN_TIME_BETWEEN_SPAWNS:
+        # I find that the linear algorithm starts out too slow, and the
+        # log algorithm starts out too fast. So we average them.
+        var linear = calculate_difficulty_linear(delta)
+        var logarithmic = calculate_difficulty_log(delta)
+        time_between_spawns = (linear + logarithmic)/2
+        
+        challenge_count += 1
+    else:
+        time_between_spawns = MIN_TIME_BETWEEN_SPAWNS
+        
+        
+func calculate_difficulty_linear(delta):    
+    var num_ticks = TIME_FOR_MAX_DIFFICULTY/delta - 1
+    var difference = BASE_TIME_BETWEEN_SPAWNS - MIN_TIME_BETWEEN_SPAWNS
+    var quotient = num_ticks/difference
+    
+    return BASE_TIME_BETWEEN_SPAWNS - (challenge_count/quotient)
+    
+func calculate_difficulty_log(delta):
+    var num_ticks = TIME_FOR_MAX_DIFFICULTY/delta
+    var degree = BASE_TIME_BETWEEN_SPAWNS - MIN_TIME_BETWEEN_SPAWNS
+    var log_base = pow(num_ticks, 1.0/degree)
+    return BASE_TIME_BETWEEN_SPAWNS - log(challenge_count + 1)/log(log_base)
