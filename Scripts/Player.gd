@@ -18,7 +18,7 @@ onready var pf_timer : Timer = $PrimaryFireTimer
 
 # Updates
 func _ready():
-    pass
+    current_aim = Vector2(cos(global_rotation), sin(global_rotation))
     
 func _process(delta):
     process_input(delta)
@@ -28,8 +28,7 @@ func _process(delta):
 func _input(event):
     if event is InputEventMouseMotion:
         aimed_mouse = true
-        aim_vector = global_position - event.position
-        aim_vector = Vector2(aim_vector.y, -aim_vector.x)
+        aim_vector = event.position - global_position
     
 func process_input(_delta):
     movement_vector = get_movement_vector()
@@ -48,6 +47,7 @@ func process_movement(delta):
         current_velocity = current_velocity.linear_interpolate(Vector2.ZERO, PLAYER_DECELERATION)
     
     global_position += current_velocity*delta
+    clamp_position()
         
 func process_rotation(delta):
     # The player's sprite doesn't just snap to the desired angle, it instead
@@ -58,17 +58,22 @@ func process_rotation(delta):
     
     # This calculates the desired angle based on joystick/cursor position, as
     # well as the shortest route to achieve that angle
-    var desired_angle : int = rad2deg(atan2(current_aim.y, current_aim.x)) + 180
-    var current_angle : int = global_rotation_degrees + 180
+    var desired_angle = int(rad2deg(atan2(current_aim.y, current_aim.x)))
+    var current_angle = int(global_rotation_degrees)
     var difference = (desired_angle - current_angle + 540) % 360 - 180
       
     if abs(difference) < PLAYER_TURN_SPEED:
-        global_rotation_degrees = desired_angle - 180
+        global_rotation_degrees = desired_angle
     elif difference < 0:
         global_rotation -= PLAYER_TURN_SPEED*delta
     else:
         global_rotation += PLAYER_TURN_SPEED*delta
 
+func clamp_position():
+    var screen_size = get_viewport().size
+    global_position.x = clamp(global_position.x, 0, screen_size.x)
+    global_position.y = clamp(global_position.y, 0, screen_size.y)
+    
 # Helpers
 func get_movement_vector() -> Vector2:
     var move_vec : Vector2 = Vector2()
@@ -92,13 +97,13 @@ func get_aim_vector() -> Vector2:
     var aim_vec : Vector2 = Vector2()
     
     if Input.is_action_pressed("aim_up"):
-        aim_vec.x += Input.get_action_strength("aim_up")
+        aim_vec.y -= Input.get_action_strength("aim_up")
     if Input.is_action_pressed("aim_down"):
-        aim_vec.x -= Input.get_action_strength("aim_down")
+        aim_vec.y += Input.get_action_strength("aim_down")
     if Input.is_action_pressed("aim_left"):
-        aim_vec.y -= Input.get_action_strength("aim_left")
+        aim_vec.x -= Input.get_action_strength("aim_left")
     if Input.is_action_pressed("aim_right"):
-        aim_vec.y += Input.get_action_strength("aim_right")
+        aim_vec.x += Input.get_action_strength("aim_right")
         
     return aim_vec.normalized()
 
@@ -108,7 +113,7 @@ func action_primary_fire():
     the_world.add_child(bullet_obj)
     
     bullet_obj.set_initial_position(global_position)
-    bullet_obj.set_bullet_velocity(Vector2(current_aim.y, -current_aim.x))
+    bullet_obj.set_bullet_velocity(current_aim)
     
     pf_timer.start(PRIMARY_FIRE_CD)
 

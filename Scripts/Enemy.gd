@@ -1,7 +1,8 @@
 extends Node2D
 
 const ENEMY_MAX_HEALTH : int = 5
-const ENEMY_TRAVEL_SPEED : float = 3.0
+const ENEMY_MAX_SPEED : float = 5.0
+const ENEMY_MIN_SPEED : float = 3.0
 const ENEMY_LIFESPAN : float = 10.0
 
 var current_health : int = ENEMY_MAX_HEALTH
@@ -35,7 +36,9 @@ func attempt_damage_player():
 
 func set_enemy_velocity(direction : Vector2):
     direction = direction.normalized()
-    current_velocity = direction*ENEMY_TRAVEL_SPEED
+    current_velocity = direction*rand_range(ENEMY_MIN_SPEED, ENEMY_MAX_SPEED)
+    if current_velocity.x < 0:
+        get_node("Sprite").set_flip_h(true)
     
 func set_initial_position(initial_pos : Vector2):
     global_position = initial_pos

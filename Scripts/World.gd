@@ -6,8 +6,8 @@ const POINTS_PER_TICK : int = 10
 const POINTS_PER_ENEMY : int = 1000
 
 # Constants (difficulty)
-const BASE_TIME_BETWEEN_SPAWNS : float = 1.0
-const MIN_TIME_BETWEEN_SPAWNS : float = 0.2
+const BASE_TIME_BETWEEN_SPAWNS : float = 0.75
+const MIN_TIME_BETWEEN_SPAWNS : float = 0.15
 const TIME_FOR_MAX_DIFFICULTY : float = 120.0
 
 # Variables
@@ -63,6 +63,7 @@ func start_new_game():
     # Clear enemies
     for object in enemy_container.get_children():
         enemy_container.remove_child(object)
+    challenge_count = 0
     
     # Reset score
     current_score = 0
@@ -79,8 +80,9 @@ func get_random_spawnpoint(chosen_side : String) -> Vector2:
     # This chooses a random point along the specified edge of the screen.
     # This is used to determine where to spawn enemies
     var screen_size = get_viewport().size
-    var chosen_x = rand_range(0, screen_size.x)
-    var chosen_y = rand_range(0, screen_size.y)
+    var margin = 0.1
+    var chosen_x = rand_range(screen_size.x*margin, screen_size.x*(1 - margin))
+    var chosen_y = rand_range(screen_size.y*margin, screen_size.y*(1 - margin))
     
     var spawn_point : Vector2
     if chosen_side == "up":
@@ -147,19 +149,20 @@ func increase_difficulty(delta):
         time_between_spawns = (linear + logarithmic)/2
         
         challenge_count += 1
+        
     else:
         time_between_spawns = MIN_TIME_BETWEEN_SPAWNS
         
         
 func calculate_difficulty_linear(delta):    
-    var num_ticks = TIME_FOR_MAX_DIFFICULTY/delta - 1
+    var num_ticks = TIME_FOR_MAX_DIFFICULTY/max(delta, 0.000001) - 1
     var difference = BASE_TIME_BETWEEN_SPAWNS - MIN_TIME_BETWEEN_SPAWNS
     var quotient = num_ticks/difference
     
     return BASE_TIME_BETWEEN_SPAWNS - (challenge_count/quotient)
     
 func calculate_difficulty_log(delta):
-    var num_ticks = TIME_FOR_MAX_DIFFICULTY/delta
+    var num_ticks = TIME_FOR_MAX_DIFFICULTY/max(delta, 0.000001)
     var degree = BASE_TIME_BETWEEN_SPAWNS - MIN_TIME_BETWEEN_SPAWNS
     var log_base = pow(num_ticks, 1.0/degree)
     return BASE_TIME_BETWEEN_SPAWNS - log(challenge_count + 1)/log(log_base)
