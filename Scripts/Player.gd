@@ -20,6 +20,7 @@ onready var bullet_scene = load("res://Scenes/Bullet.tscn")
 onready var pf_timer : Timer = $PrimaryFireTimer
 onready var collection_radius : Area2D = $CollectionRadius
 onready var joy_crosshair : Sprite = $Crosshair
+onready var interface : Control = get_tree().get_root().get_node("World/Interface")
 
 onready var powerup_timers = {
     0: $PowerupTimers/SurroundTimer,
@@ -89,10 +90,9 @@ func process_rotation(delta):
         global_rotation += PLAYER_TURN_SPEED*delta
 
 func clamp_position():
-    var screen_size_x = ProjectSettings.get_setting("display/window/size/width")
-    var screen_size_y = ProjectSettings.get_setting("display/window/size/height")
-    global_position.x = clamp(global_position.x, 0, screen_size_x)
-    global_position.y = clamp(global_position.y, 0, screen_size_y)
+    var screen_size = interface.get_effective_screen_size()
+    global_position.x = clamp(global_position.x, 0, screen_size.x)
+    global_position.y = clamp(global_position.y, 0, screen_size.y)
 
 func attempt_collect_powerups():
     var areas = collection_radius.get_overlapping_areas()

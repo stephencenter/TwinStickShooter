@@ -6,8 +6,9 @@ const BULLET_DAMAGE : int = 1
 
 onready var lifespan_timer : Timer = $LifespanTimer
 onready var hitbox : Area2D = $Hitbox
-onready var the_world = get_parent().get_parent()
 onready var homing_radius : Area2D = $HomingRadius
+onready var the_world : Node2D = get_tree().get_root().get_node("World")
+onready var interface : Control = the_world.get_node("Interface")
 
 var current_velocity : Vector2
 
@@ -61,11 +62,10 @@ func attempt_damage_enemies():
         self_destruct()
         
 func keep_alive_if_inbounds():
-    var screen_size_x = ProjectSettings.get_setting("display/window/size/width")
-    var screen_size_y = ProjectSettings.get_setting("display/window/size/height")
+    var screen_size = interface.get_effective_screen_size()
     
-    if global_position.x > 0 and global_position.x < screen_size_x:
-        if global_position.y > 0 and global_position.y < screen_size_y:
+    if global_position.x > 0 and global_position.x < screen_size.x:
+        if global_position.y > 0 and global_position.y < screen_size.y:
             lifespan_timer.start(BULLET_LIFESPAN)
         
 func self_destruct():

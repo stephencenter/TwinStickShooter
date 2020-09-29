@@ -30,6 +30,7 @@ onready var points_timer : Timer = $AlivePointsTimer
 onready var difficulty_timer : Timer = $DifficultyTimer
 onready var powerup_spawn_timer : Timer = $PowerupSpawnTimer
 onready var object_container = $ObjectContainer
+onready var interface : Control = $Interface
 
 # Scenes
 onready var enemy_to_spawn = load("res://Scenes/Enemy.tscn")
@@ -64,16 +65,16 @@ func _process(_delta):
     update_hud()
 
 func update_hud():
-    $CanvasLayer/CurrentScore.set_text("SCORE: %s" % current_score)
+    $Interface/CurrentScore.set_text("SCORE: %s" % current_score)
     
     var elapsed_time = current_time - start_time
     var minutes = elapsed_time / 60
     var seconds = elapsed_time % 60
     var string_time : String = "%02d:%02d" % [minutes, seconds]
-    $CanvasLayer/ElapsedTime.set_text("TIME: %s" % string_time)
+    $Interface/ElapsedTime.set_text("TIME: %s" % string_time)
     
     var fps = Engine.get_frames_per_second()
-    $CanvasLayer/Framerate.set_text("%s FPS" % fps)
+    $Interface/Framerate.set_text("%s FPS" % fps)
     
 func start_new_game():    
     # Clear objects
@@ -81,10 +82,8 @@ func start_new_game():
         object_container.remove_child(object)
     
     # Spawn Player
-    var spawn_point_x = ProjectSettings.get_setting("display/window/size/width")/2
-    var spawn_point_y = ProjectSettings.get_setting("display/window/size/height")/2
     var player_obj = player_scene.instance()
-    player_obj.global_position = Vector2(spawn_point_x, spawn_point_y)
+    player_obj.global_position = interface.get_effective_screen_size()/2
     object_container.add_child(player_obj)
     
     # Reset score
@@ -114,21 +113,21 @@ func get_enemy_spawnpoint(chosen_side : String) -> Vector2:
     # This is used to determine where to spawn enemies
     # Margin ensures that enemies won't spawn in the corners
     var deadzone = 0.1
-    var screen_size_x = ProjectSettings.get_setting("display/window/size/width")
-    var screen_size_y = ProjectSettings.get_setting("display/window/size/height")
-    var chosen_x = rand_range(screen_size_x*deadzone, screen_size_x*(1 - deadzone))
-    var chosen_y = rand_range(screen_size_y*deadzone, screen_size_y*(1 - deadzone))
+    var screen_size = interface.get_effective_screen_size()
+    var chosen_x = rand_range(screen_size.x*deadzone, screen_size.x*(1 - deadzone))
+    var chosen_y = rand_range(screen_size.y*deadzone, screen_size.y*(1 - deadzone))
     
     var buffer = 0.1
     var spawn_point : Vector2
     if chosen_side == "up":
-        spawn_point = Vector2(chosen_x, -screen_size_y*buffer)  
+        spawn_point = Vector2(chosen_x, -screen_size.y*buffer)  
+        spawn_point = Vector2(chosen_x, -screen_size.y*buffer)  
     elif chosen_side == "down":
-        spawn_point = Vector2(chosen_x, screen_size_y*(1 + buffer))
+        spawn_point = Vector2(chosen_x, screen_size.y*(1 + buffer))
     elif chosen_side == "left":
-        spawn_point = Vector2(-screen_size_x*buffer, chosen_y)
+        spawn_point = Vector2(-screen_size.x*buffer, chosen_y)
     else:
-        spawn_point = Vector2(screen_size_x*(1 + buffer), chosen_y)
+        spawn_point = Vector2(screen_size.x*(1 + buffer), chosen_y)
         
     return spawn_point
 
@@ -204,11 +203,10 @@ func calculate_difficulty_log():
 
 # Powerup spawner
 func get_powerup_spawnpoint() -> Vector2:
-    var margin = 0.05
-    var screen_size_x = ProjectSettings.get_setting("display/window/size/width")
-    var screen_size_y = ProjectSettings.get_setting("display/window/size/height")
-    var chosen_x = rand_range(screen_size_x*margin, screen_size_x*(1 - margin))
-    var chosen_y = rand_range(screen_size_y*margin, screen_size_y*(1 - margin))
+    var deadzone = 0.05
+    var screen_size = interface.get_effective_screen_size()
+    var chosen_x = rand_range(screen_size.x*deadzone, screen_size.x*(1 - deadzone))
+    var chosen_y = rand_range(screen_size.y*deadzone, screen_size.y*(1 - deadzone))
     
     return Vector2(chosen_x, chosen_y)
 

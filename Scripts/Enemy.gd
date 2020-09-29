@@ -10,7 +10,8 @@ var current_velocity : Vector2
 
 onready var hitbox : Area2D = $Hitbox
 onready var lifespan_timer : Timer = $LifespanTimer
-onready var the_world : Node2D = get_parent().get_parent()
+onready var the_world : Node2D = get_tree().get_root().get_node("World")
+onready var interface : Control = the_world.get_node("Interface")
 
 func _ready():
     lifespan_timer.start(ENEMY_LIFESPAN)
@@ -48,12 +49,11 @@ func set_enemy_velocity(direction : Vector2):
 func set_initial_position(initial_pos : Vector2):
     global_position = initial_pos
     
-func keep_alive_if_inbounds():        
-    var screen_size_x = ProjectSettings.get_setting("display/window/size/width")
-    var screen_size_y = ProjectSettings.get_setting("display/window/size/height")
+func keep_alive_if_inbounds():
+    var screen_size = interface.get_effective_screen_size()
     
-    if global_position.x > 0 and global_position.x < screen_size_x:
-        if global_position.y > 0 and global_position.y < screen_size_y:
+    if global_position.x > 0 and global_position.x < screen_size.x:
+        if global_position.y > 0 and global_position.y < screen_size.y:
             lifespan_timer.start(ENEMY_LIFESPAN)
             
 func self_destruct():
