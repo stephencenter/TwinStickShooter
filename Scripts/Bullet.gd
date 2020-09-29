@@ -1,10 +1,9 @@
 extends Node2D
 
 const BULLET_TRAVEL_SPEED : float = 800.0
-const BULLET_LIFESPAN : float = 5.0
+const BULLET_LIFESPAN : float = 3.0
 const BULLET_DAMAGE : int = 1
 
-onready var player = get_parent().get_node("Player")
 onready var lifespan_timer : Timer = $LifespanTimer
 onready var hitbox : Area2D = $Hitbox
 
@@ -16,6 +15,7 @@ func _ready():
 func _process(delta):
     global_position += current_velocity*delta
     attempt_damage_enemies()
+    keep_alive_if_inbounds()
     
     if lifespan_timer.time_left == 0:
         self_destruct()
@@ -33,7 +33,15 @@ func attempt_damage_enemies():
         var enemy = areas[0].get_parent()
         enemy.take_damage_from_player(BULLET_DAMAGE)
         self_destruct()
-
+        
+func keep_alive_if_inbounds():        
+    var screen_size_x = ProjectSettings.get_setting("display/window/size/width")
+    var screen_size_y = ProjectSettings.get_setting("display/window/size/height")
+    
+    if global_position.x > 0 and global_position.x < screen_size_x:
+        if global_position.y > 0 and global_position.y < screen_size_y:
+            lifespan_timer.start(BULLET_LIFESPAN)
+        
 func self_destruct():
     var parent = get_parent()
     if parent != null:

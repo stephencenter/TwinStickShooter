@@ -13,8 +13,15 @@ var aim_vector : Vector2
 var aimed_mouse : bool = false
 
 onready var bullet_scene = load("res://Scenes/Bullet.tscn")
-onready var the_world : Node2D = get_parent()
 onready var pf_timer : Timer = $PrimaryFireTimer
+onready var collection_radius : Area2D = $CollectionRadius
+
+var powerup_flags = {
+    0: false,
+    1: false,
+    2: false,
+    3: false
+}
 
 # Updates
 func _ready():
@@ -24,6 +31,8 @@ func _process(delta):
     process_input(delta)
     process_movement(delta)
     process_rotation(delta)
+    
+    attempt_collect_powerups()
 
 func _input(event):
     if event is InputEventMouseMotion:
@@ -74,6 +83,12 @@ func clamp_position():
     var screen_size_y = ProjectSettings.get_setting("display/window/size/height")
     global_position.x = clamp(global_position.x, 0, screen_size_x)
     global_position.y = clamp(global_position.y, 0, screen_size_y)
+
+func attempt_collect_powerups():
+    var areas = collection_radius.get_overlapping_areas()
+    if !areas.empty():
+        var powerup = areas[0].get_parent()
+        powerup.self_destruct()
     
 # Helpers
 func get_movement_vector() -> Vector2:
@@ -111,7 +126,7 @@ func get_aim_vector() -> Vector2:
 # Actions
 func action_primary_fire():
     var bullet_obj = bullet_scene.instance()
-    the_world.add_child(bullet_obj)
+    get_parent().add_child(bullet_obj)
     
     bullet_obj.set_initial_position(global_position)
     bullet_obj.set_bullet_velocity(current_aim)
