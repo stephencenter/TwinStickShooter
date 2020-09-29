@@ -3,8 +3,12 @@ extends Node2D
 const PLAYER_MAX_SPEED : float = 250.0
 const PLAYER_ACCELERATION : float = 0.2
 const PLAYER_DECELERATION : float = 0.1
-const PLAYER_TURN_SPEED : float = 15.0
+const PLAYER_TURN_SPEED : float = 20.0
 const PRIMARY_FIRE_CD : float = 0.1
+const POWERUP_DURATION : float = 10.0
+const JOY_LEFT_DEADZONE : float = 0.05
+const JOY_RIGHT_DEADZONE : float = 0.5
+const JOY_CROSSHAIR_DISTANCE : float = 80.0
 
 var current_velocity : Vector2
 var movement_vector : Vector2
@@ -15,37 +19,43 @@ var aimed_mouse : bool = false
 onready var bullet_scene = load("res://Scenes/Bullet.tscn")
 onready var pf_timer : Timer = $PrimaryFireTimer
 onready var collection_radius : Area2D = $CollectionRadius
+onready var joy_crosshair : Sprite = $Crosshair
 
-var powerup_flags = {
-    0: false,
-    1: false,
-    2: false,
-    3: false
+onready var powerup_timers = {
+    0: $PowerupTimers/SurroundTimer,
+    1: $PowerupTimers/BarrierTimer,
+    2: $PowerupTimers/MultishotTimer,
+    3: $PowerupTimers/HomingTimer
 }
 
 # Updates
 func _ready():
-    current_aim = Vector2(cos(global_rotation), sin(global_rotation))
+    pass
     
 func _process(delta):
     process_input(delta)
     process_movement(delta)
     process_rotation(delta)
-    
+    update_crosshair_position()
     attempt_collect_powerups()
 
 func _input(event):
     if event is InputEventMouseMotion:
+        if Input.get_mouse_mode() == Input.MOUSE_MODE_HIDDEN:
+            get_viewport().warp_mouse(joy_crosshair.global_position)
+            
+        enable_mouse_cursor()
         aimed_mouse = true
-        aim_vector = event.position - global_position
     
 func process_input(_delta):
     movement_vector = get_movement_vector()
-    aim_vector = get_aim_vector()
+    aim_vector = get_aim_joystick()
     
-    if Input.is_action_pressed("primary_fire"):
-        if pf_timer.time_left == 0:
-            action_primary_fire()
+    if Input.get_mouse_mode() == Input.MOUSE_MODE_VISIBLE:
+        aim_vector = get_viewport().get_mouse_position() - global_position
+    
+    if pf_timer.time_left == 0:
+        action_primary_fire()
 
 func process_movement(delta):
     movement_vector = movement_vector*PLAYER_MAX_SPEED
@@ -88,7 +98,30 @@ func attempt_collect_powerups():
     var areas = collection_radius.get_overlapping_areas()
     if !areas.empty():
         var powerup = areas[0].get_parent()
+        
+        if powerup.get_parent() != null:
+            powerup_timers[powerup.powerup_type].start(POWERUP_DURATION)
+            
         powerup.self_destruct()
+        
+func cancel_powerup(powerup : int):
+    powerup_timers[powerup].stop()
+    
+func has_powerup(powerup : int):
+    return powerup_timers[powerup].time_left > 0
+
+func enable_joystick_cursor():
+    Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
+    joy_crosshair.visible = true
+    
+func enable_mouse_cursor():
+    Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+    joy_crosshair.visible = false
+
+func update_crosshair_position():
+    var angle_vec = Vector2(cos(global_rotation), sin(global_rotation))
+    joy_crosshair.global_position = global_position + angle_vec*JOY_CROSSHAIR_DISTANCE
+    joy_crosshair.global_rotation = 0
     
 # Helpers
 func get_movement_vector() -> Vector2:
@@ -103,9 +136,12 @@ func get_movement_vector() -> Vector2:
     if Input.is_action_pressed("move_right"):
         move_vec.x += Input.get_action_strength("move_right")
         
+    if move_vec.length() < JOY_LEFT_DEADZONE:
+        return Vector2.ZERO
+        
     return move_vec
 
-func get_aim_vector() -> Vector2:
+func get_aim_joystick() -> Vector2:
     if aimed_mouse:
         aimed_mouse = false
         return aim_vector
@@ -120,11 +156,18 @@ func get_aim_vector() -> Vector2:
         aim_vec.x -= Input.get_action_strength("aim_left")
     if Input.is_action_pressed("aim_right"):
         aim_vec.x += Input.get_action_strength("aim_right")
+    
+    if aim_vec.length() < JOY_RIGHT_DEADZONE:
+        return Vector2.ZERO
         
+    enable_joystick_cursor()
     return aim_vec.normalized()
 
 # Actions
 func action_primary_fire():
+    if current_aim.length() == 0:
+        return
+        
     var bullet_obj = bullet_scene.instance()
     get_parent().add_child(bullet_obj)
     
@@ -134,6 +177,5 @@ func action_primary_fire():
     pf_timer.start(PRIMARY_FIRE_CD)
 
 func self_destruct():
-    var parent = get_parent()
-    if parent != null:
-        parent.remove_child(self)
+    if is_inside_tree():
+        get_parent().remove_child(self)

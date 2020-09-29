@@ -104,7 +104,9 @@ func is_player_alive():
     return object_container.has_node("Player")
 
 func get_player():
-    return object_container.get_node("Player")
+    if is_player_alive():
+        return object_container.get_node("Player")
+    return null
     
 # Enemy spawner
 func get_enemy_spawnpoint(chosen_side : String) -> Vector2:

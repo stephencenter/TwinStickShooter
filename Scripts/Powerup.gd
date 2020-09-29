@@ -1,6 +1,6 @@
 extends Node2D
 
-const POWERUP_LIFESPAN : float = 5.0
+const POWERUP_LIFESPAN : float = 8.0
 enum POWERUP_TYPES {SURROUND, BARRIER, MULTISHOT, HOMING}
 var POWERUP_SPRITEMAP : Dictionary
 
@@ -40,6 +40,5 @@ func set_powerup_type(new_type : int):
     sprite.texture = POWERUP_SPRITEMAP[powerup_type]
     
 func self_destruct():
-    var parent = get_parent()
-    if parent != null:
-        parent.remove_child(self)
+    if is_inside_tree():
+        get_parent().remove_child(self)

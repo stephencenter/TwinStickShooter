@@ -16,13 +16,13 @@ func _ready():
     lifespan_timer.start(ENEMY_LIFESPAN)
     
 func _process(delta):
-    global_position += current_velocity*delta
+    if is_inside_tree():
+        keep_alive_if_inbounds()
+        global_position += current_velocity*delta
+        attempt_damage_player()
     
-    keep_alive_if_inbounds()
-    if lifespan_timer.time_left == 0:
-        self_destruct()
-        
-    attempt_damage_player()
+        if lifespan_timer.time_left == 0:
+            self_destruct()
 
 func take_damage_from_player(damage_amount : int):
     current_health -= damage_amount
@@ -57,6 +57,5 @@ func keep_alive_if_inbounds():
             lifespan_timer.start(ENEMY_LIFESPAN)
             
 func self_destruct():
-    var parent = get_parent()
-    if parent != null:
-        parent.remove_child(self)
+    if is_inside_tree():
+        get_parent().remove_child(self)
