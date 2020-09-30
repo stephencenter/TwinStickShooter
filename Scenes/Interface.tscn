@@ -1,9 +1,8 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=12 format=2]
 
 [ext_resource path="res://Fonts/hud_font.tres" type="DynamicFont" id=1]
 [ext_resource path="res://Fonts/hud_font_small.tres" type="DynamicFont" id=2]
 [ext_resource path="res://Scripts/Interface.gd" type="Script" id=3]
-[ext_resource path="res://Scripts/CenterHUD.gd" type="Script" id=4]
 [ext_resource path="res://Scripts/SettingsMenu/AspectRatio.gd" type="Script" id=5]
 [ext_resource path="res://Scripts/SettingsMenu/Resolution.gd" type="Script" id=6]
 [ext_resource path="res://Scripts/SettingsMenu/Apply.gd" type="Script" id=7]
@@ -17,47 +16,9 @@
 pause_mode = 2
 script = ExtResource( 3 )
 
-[node name="CenterHUD" type="Node2D" parent="."]
-script = ExtResource( 4 )
+[node name="Centered" type="Node2D" parent="."]
 
-[node name="CurrentScore" type="Label" parent="CenterHUD"]
-margin_left = 6.0
-margin_top = 1.0
-margin_right = 233.0
-margin_bottom = 30.0
-custom_fonts/font = ExtResource( 1 )
-text = "SCORE: 0 POINTS"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="ElapsedTime" type="Label" parent="CenterHUD"]
-anchor_top = -0.00185185
-anchor_bottom = -0.00185185
-margin_left = 1816.0
-margin_top = 2.0
-margin_right = 1914.0
-margin_bottom = 41.0
-grow_horizontal = 0
-custom_fonts/font = ExtResource( 1 )
-text = "TIME:"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Framerate" type="Label" parent="CenterHUD"]
-visible = false
-margin_left = 4.0
-margin_top = 1058.0
-margin_right = 76.0
-margin_bottom = 1080.0
-custom_fonts/font = ExtResource( 2 )
-text = "60 FPS"
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="PauseScreen" type="Panel" parent="CenterHUD"]
+[node name="PauseScreen" type="Panel" parent="Centered"]
 visible = false
 margin_left = 147.598
 margin_top = 71.71
@@ -68,7 +29,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="AspectRatio" type="Control" parent="CenterHUD/PauseScreen"]
+[node name="AspectRatio" type="Control" parent="Centered/PauseScreen"]
 margin_left = 43.0
 margin_top = 72.0
 margin_right = 83.0
@@ -78,7 +39,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Clickable" type="OptionButton" parent="CenterHUD/PauseScreen/AspectRatio"]
+[node name="Clickable" type="OptionButton" parent="Centered/PauseScreen/AspectRatio"]
 margin_left = 310.0
 margin_right = 560.0
 margin_bottom = 45.0
@@ -88,7 +49,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="CenterHUD/PauseScreen/AspectRatio"]
+[node name="Label" type="Label" parent="Centered/PauseScreen/AspectRatio"]
 margin_right = 283.0
 margin_bottom = 45.0
 custom_fonts/font = ExtResource( 1 )
@@ -98,20 +59,20 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ArrowLeft" type="Sprite" parent="CenterHUD/PauseScreen/AspectRatio"]
+[node name="ArrowLeft" type="Sprite" parent="Centered/PauseScreen/AspectRatio"]
 visible = false
 position = Vector2( 293, 22.5 )
 scale = Vector2( 0.1, 0.1 )
 texture = ExtResource( 12 )
 
-[node name="ArrowRight" type="Sprite" parent="CenterHUD/PauseScreen/AspectRatio"]
+[node name="ArrowRight" type="Sprite" parent="Centered/PauseScreen/AspectRatio"]
 visible = false
 position = Vector2( 575, 22.5 )
 rotation = 3.14159
 scale = Vector2( 0.1, 0.1 )
 texture = ExtResource( 12 )
 
-[node name="Resolution" type="Control" parent="CenterHUD/PauseScreen"]
+[node name="Resolution" type="Control" parent="Centered/PauseScreen"]
 margin_left = 43.0
 margin_top = 149.0
 margin_right = 83.0
@@ -120,7 +81,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Clickable" type="OptionButton" parent="CenterHUD/PauseScreen/Resolution"]
+[node name="Clickable" type="OptionButton" parent="Centered/PauseScreen/Resolution"]
 margin_left = 310.0
 margin_right = 560.0
 margin_bottom = 45.0
@@ -130,7 +91,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="CenterHUD/PauseScreen/Resolution"]
+[node name="Label" type="Label" parent="Centered/PauseScreen/Resolution"]
 margin_right = 283.0
 margin_bottom = 45.0
 custom_fonts/font = ExtResource( 1 )
@@ -140,20 +101,20 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ArrowLeft" type="Sprite" parent="CenterHUD/PauseScreen/Resolution"]
+[node name="ArrowLeft" type="Sprite" parent="Centered/PauseScreen/Resolution"]
 visible = false
 position = Vector2( 293, 21.5 )
 scale = Vector2( 0.1, 0.1 )
 texture = ExtResource( 12 )
 
-[node name="ArrowRight" type="Sprite" parent="CenterHUD/PauseScreen/Resolution"]
+[node name="ArrowRight" type="Sprite" parent="Centered/PauseScreen/Resolution"]
 visible = false
 position = Vector2( 575, 21.5 )
 rotation = -3.14159
 scale = Vector2( 0.1, 0.1 )
 texture = ExtResource( 12 )
 
-[node name="DisplayMode" type="Control" parent="CenterHUD/PauseScreen"]
+[node name="DisplayMode" type="Control" parent="Centered/PauseScreen"]
 margin_left = 43.0
 margin_top = 226.0
 margin_right = 83.0
@@ -163,7 +124,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="CenterHUD/PauseScreen/DisplayMode"]
+[node name="Label" type="Label" parent="Centered/PauseScreen/DisplayMode"]
 margin_right = 283.0
 margin_bottom = 39.0
 custom_fonts/font = ExtResource( 1 )
@@ -172,7 +133,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Windowed" type="Control" parent="CenterHUD/PauseScreen/DisplayMode"]
+[node name="Windowed" type="Control" parent="Centered/PauseScreen/DisplayMode"]
 margin_left = 330.0
 margin_right = 370.0
 margin_bottom = 40.0
@@ -181,7 +142,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Clickable" type="Button" parent="CenterHUD/PauseScreen/DisplayMode/Windowed"]
+[node name="Clickable" type="Button" parent="Centered/PauseScreen/DisplayMode/Windowed"]
 margin_right = 1767.0
 margin_bottom = 262.0
 rect_scale = Vector2( 0.148, 0.148 )
@@ -191,7 +152,7 @@ icon = ExtResource( 9 )
 flat = true
 script = ExtResource( 10 )
 
-[node name="Label" type="Label" parent="CenterHUD/PauseScreen/DisplayMode/Windowed"]
+[node name="Label" type="Label" parent="Centered/PauseScreen/DisplayMode/Windowed"]
 margin_left = 46.945
 margin_right = 256.945
 margin_bottom = 39.0
@@ -201,7 +162,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Fullscreen" type="Control" parent="CenterHUD/PauseScreen/DisplayMode"]
+[node name="Fullscreen" type="Control" parent="Centered/PauseScreen/DisplayMode"]
 margin_left = 639.945
 margin_right = 679.945
 margin_bottom = 40.0
@@ -210,7 +171,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Clickable" type="Button" parent="CenterHUD/PauseScreen/DisplayMode/Fullscreen"]
+[node name="Clickable" type="Button" parent="Centered/PauseScreen/DisplayMode/Fullscreen"]
 margin_right = 1949.0
 margin_bottom = 262.0
 rect_scale = Vector2( 0.148, 0.148 )
@@ -221,7 +182,7 @@ flat = true
 script = ExtResource( 10 )
 display_mode_id = 1
 
-[node name="Label" type="Label" parent="CenterHUD/PauseScreen/DisplayMode/Fullscreen"]
+[node name="Label" type="Label" parent="Centered/PauseScreen/DisplayMode/Fullscreen"]
 margin_left = 47.0
 margin_right = 282.0
 margin_bottom = 39.0
@@ -231,7 +192,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Borderless" type="Control" parent="CenterHUD/PauseScreen/DisplayMode"]
+[node name="Borderless" type="Control" parent="Centered/PauseScreen/DisplayMode"]
 margin_left = 975.96
 margin_right = 1015.96
 margin_bottom = 40.0
@@ -240,7 +201,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Clickable" type="Button" parent="CenterHUD/PauseScreen/DisplayMode/Borderless"]
+[node name="Clickable" type="Button" parent="Centered/PauseScreen/DisplayMode/Borderless"]
 margin_right = 1983.0
 margin_bottom = 262.0
 rect_scale = Vector2( 0.148, 0.148 )
@@ -251,7 +212,7 @@ flat = true
 script = ExtResource( 10 )
 display_mode_id = 2
 
-[node name="Label" type="Label" parent="CenterHUD/PauseScreen/DisplayMode/Borderless"]
+[node name="Label" type="Label" parent="Centered/PauseScreen/DisplayMode/Borderless"]
 margin_left = 46.945
 margin_right = 256.945
 margin_bottom = 39.0
@@ -261,13 +222,13 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Apply" type="Control" parent="CenterHUD/PauseScreen"]
+[node name="Apply" type="Control" parent="Centered/PauseScreen"]
 margin_left = 356.0
 margin_top = 780.0
 margin_right = 396.0
 margin_bottom = 820.0
 
-[node name="Clickable" type="Button" parent="CenterHUD/PauseScreen/Apply"]
+[node name="Clickable" type="Button" parent="Centered/PauseScreen/Apply"]
 margin_right = 285.0
 margin_bottom = 81.0
 custom_fonts/font = ExtResource( 1 )
@@ -277,13 +238,13 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Resume" type="Control" parent="CenterHUD/PauseScreen"]
+[node name="Resume" type="Control" parent="Centered/PauseScreen"]
 margin_left = 43.0
 margin_top = 780.0
 margin_right = 83.0
 margin_bottom = 820.0
 
-[node name="Clickable" type="Button" parent="CenterHUD/PauseScreen/Resume"]
+[node name="Clickable" type="Button" parent="Centered/PauseScreen/Resume"]
 margin_right = 285.0
 margin_bottom = 81.0
 custom_fonts/font = ExtResource( 1 )
@@ -293,7 +254,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="SuccessLabel" type="Label" parent="CenterHUD/PauseScreen"]
+[node name="SuccessLabel" type="Label" parent="Centered/PauseScreen"]
 margin_left = 1034.96
 margin_top = 780.0
 margin_right = 1526.96
@@ -307,5 +268,47 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="SuccessTimer" type="Timer" parent="CenterHUD/PauseScreen"]
+[node name="SuccessTimer" type="Timer" parent="Centered/PauseScreen"]
 one_shot = true
+
+[node name="TopLeft" type="Node2D" parent="."]
+
+[node name="CurrentScore" type="Label" parent="TopLeft"]
+margin_left = 6.0
+margin_top = 1.0
+margin_right = 312.0
+margin_bottom = 40.0
+custom_fonts/font = ExtResource( 1 )
+text = "SCORE: 0 POINTS"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TopRight" type="Node2D" parent="."]
+
+[node name="ElapsedTime" type="Label" parent="TopRight"]
+anchor_top = -0.00185185
+anchor_bottom = -0.00185185
+margin_left = 1816.0
+margin_top = 2.0
+margin_right = 1914.0
+margin_bottom = 41.0
+grow_horizontal = 0
+custom_fonts/font = ExtResource( 1 )
+text = "TIME:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="BotLeft" type="Node2D" parent="."]
+
+[node name="Framerate" type="Label" parent="BotLeft"]
+margin_left = 4.0
+margin_top = 1058.0
+margin_right = 76.0
+margin_bottom = 1080.0
+custom_fonts/font = ExtResource( 2 )
+text = "60 FPS"
+__meta__ = {
+"_edit_use_anchors_": false
+}

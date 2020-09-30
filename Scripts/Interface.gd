@@ -14,7 +14,7 @@ var previous_reso_id = -1
 var previous_dm = -1
 
 onready var the_world = get_tree().get_root().get_node("World")
-onready var pause_screen = $CenterHUD/PauseScreen
+onready var pause_screen = $Centered/PauseScreen
 
 func _ready():
     temp_settings = SETTINGS.duplicate()
@@ -26,6 +26,7 @@ func _process(_delta):
         
     use_settings()
     update_fps_counter()
+    align_ui_elements()
 
 func toggle_pause():
     var tree = get_tree()
@@ -40,7 +41,18 @@ func toggle_pause():
         
     else:
         temp_settings = {}
-     
+
+func align_ui_elements():
+    var internal_x = ProjectSettings.get_setting("display/window/size/width")
+    var internal_y = ProjectSettings.get_setting("display/window/size/height")
+    var effective_x = get_effective_screen_size().x
+    var effective_y = get_effective_screen_size().y
+    
+    $Centered.global_position.x = 0.5*(effective_x - internal_x)
+    $Centered.global_position.y = 0.5*(effective_y - internal_y)
+    $TopRight.global_position.x = effective_x - internal_x
+    $BotLeft.global_position.y = effective_y - internal_y
+    
 func use_settings():        
     # Set display mode
     if get_setting("display_mode") == 0:
@@ -120,4 +132,4 @@ func enable_mouse_cursor():
         the_world.get_player().joy_crosshair.visible = false
 
 func update_fps_counter():
-    $CenterHUD/Framerate.set_text("%s FPS" % Engine.get_frames_per_second())
+    $BotLeft/Framerate.set_text("%s FPS" % Engine.get_frames_per_second())

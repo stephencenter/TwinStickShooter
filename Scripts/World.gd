@@ -64,13 +64,13 @@ func _process(_delta):
     update_hud()
 
 func update_hud():
-    $Interface/CenterHUD/CurrentScore.set_text("SCORE: %s" % current_score)
+    $Interface/TopLeft/CurrentScore.set_text("SCORE: %s" % current_score)
     
     var elapsed_time = current_time - start_time
     var minutes = elapsed_time / 60
     var seconds = elapsed_time % 60
     var string_time : String = "%02d:%02d" % [minutes, seconds]
-    $Interface/CenterHUD/ElapsedTime.set_text("TIME: %s" % string_time)
+    $Interface/TopRight/ElapsedTime.set_text("TIME: %s" % string_time)
     
 func start_new_game():    
     # Clear objects

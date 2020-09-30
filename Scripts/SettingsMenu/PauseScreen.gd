@@ -28,6 +28,8 @@ func _process(_delta):
     if !get_tree().paused:
         if using_option_button:
             set_option_mode(false)
+        if visible:
+            visible = false
         return
         
     if using_option_button:
