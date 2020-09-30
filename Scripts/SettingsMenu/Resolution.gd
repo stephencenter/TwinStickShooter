@@ -16,7 +16,7 @@ func _ready():
         current_aspect_ratio = ratio
         repopulate_resolution_list()
         
-    select(interface.SETTINGS["resolution_id"])
+    select(interface.get_setting("resolution_id"))
     
 func _process(_delta):
     var ratio = get_current_aspect_ratio()
@@ -25,8 +25,8 @@ func _process(_delta):
         repopulate_resolution_list()
     
     var selected_resolution = RESOLUTION_LIST[current_aspect_ratio][get_selected_id()]
-    interface.update_temp_settings("resolution_x", selected_resolution[0])
-    interface.update_temp_settings("resolution_y", selected_resolution[1])
+    interface.set_temp_setting("resolution_x", selected_resolution[0])
+    interface.set_temp_setting("resolution_y", selected_resolution[1])
 
 func repopulate_resolution_list():
     clear()
@@ -41,13 +41,13 @@ func repopulate_resolution_list():
 
 func update_current_aspect_ratio():
     if interface.temp_settings.has("aspect_ratio"):
-        current_aspect_ratio = interface.temp_settings["aspect_ratio"]
+        current_aspect_ratio = interface.get_temp_setting("aspect_ratio")
     else:
-        current_aspect_ratio = interface.SETTINGS["aspect_ratio"]
+        current_aspect_ratio = interface.get_setting["aspect_ratio"]
 
 func get_current_aspect_ratio():
     if interface.temp_settings.has("aspect_ratio"):
-        return interface.temp_settings["aspect_ratio"]
+        return interface.get_temp_setting("aspect_ratio")
     else:
-        return interface.SETTINGS["aspect_ratio"]
+        return interface.get_setting("aspect_ratio")
     

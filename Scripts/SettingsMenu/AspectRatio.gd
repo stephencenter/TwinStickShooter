@@ -11,4 +11,4 @@ func _ready():
     select(interface.SETTINGS["aspect_ratio"])
 
 func _process(_delta):
-    interface.update_temp_settings("aspect_ratio", get_selected_id())
+    interface.set_temp_setting("aspect_ratio", get_selected_id())

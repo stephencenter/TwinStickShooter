@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://Fonts/hud_font.tres" type="DynamicFont" id=1]
 [ext_resource path="res://Fonts/hud_font_small.tres" type="DynamicFont" id=2]
@@ -8,6 +8,8 @@
 [ext_resource path="res://Scripts/SettingsMenu/Resolution.gd" type="Script" id=6]
 [ext_resource path="res://Scripts/SettingsMenu/Apply.gd" type="Script" id=7]
 [ext_resource path="res://Scripts/SettingsMenu/Resume.gd" type="Script" id=8]
+[ext_resource path="res://Sprites/radio_off.png" type="Texture" id=9]
+[ext_resource path="res://Scripts/SettingsMenu/DisplayMode.gd" type="Script" id=10]
 
 [node name="Interface" type="CanvasLayer"]
 pause_mode = 2
@@ -55,10 +57,10 @@ __meta__ = {
 
 [node name="PauseScreen" type="Panel" parent="CenterHUD"]
 visible = false
-margin_left = 160.334
-margin_top = 88.9405
-margin_right = 1760.33
-margin_bottom = 988.941
+margin_left = 147.598
+margin_top = 71.71
+margin_right = 1747.59
+margin_bottom = 971.71
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -84,8 +86,8 @@ __meta__ = {
 }
 
 [node name="Selector" type="OptionButton" parent="CenterHUD/PauseScreen/Aspect Ratio"]
-margin_left = 293.0
-margin_right = 543.0
+margin_left = 310.0
+margin_right = 560.0
 margin_bottom = 45.0
 custom_fonts/font = ExtResource( 1 )
 script = ExtResource( 5 )
@@ -114,11 +116,119 @@ __meta__ = {
 }
 
 [node name="Selector" type="OptionButton" parent="CenterHUD/PauseScreen/Resolution"]
-margin_left = 293.0
-margin_right = 543.0
+margin_left = 310.0
+margin_right = 560.0
 margin_bottom = 45.0
 custom_fonts/font = ExtResource( 1 )
 script = ExtResource( 6 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DisplayMode" type="Control" parent="CenterHUD/PauseScreen"]
+margin_left = 43.0
+margin_top = 226.0
+margin_right = 83.0
+margin_bottom = 266.0
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="CenterHUD/PauseScreen/DisplayMode"]
+margin_right = 283.0
+margin_bottom = 39.0
+custom_fonts/font = ExtResource( 1 )
+text = "DISPLAY MODE:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Windowed" type="Control" parent="CenterHUD/PauseScreen/DisplayMode"]
+margin_left = 330.0
+margin_right = 370.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="Radio" type="Button" parent="CenterHUD/PauseScreen/DisplayMode/Windowed"]
+margin_right = 1767.0
+margin_bottom = 262.0
+rect_scale = Vector2( 0.148, 0.148 )
+focus_mode = 0
+enabled_focus_mode = 0
+icon = ExtResource( 9 )
+flat = true
+script = ExtResource( 10 )
+
+[node name="Label" type="Label" parent="CenterHUD/PauseScreen/DisplayMode/Windowed"]
+margin_left = 46.945
+margin_right = 256.945
+margin_bottom = 39.0
+custom_fonts/font = ExtResource( 1 )
+text = "WINDOWED"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Fullscreen" type="Control" parent="CenterHUD/PauseScreen/DisplayMode"]
+margin_left = 639.945
+margin_right = 679.945
+margin_bottom = 40.0
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="Radio" type="Button" parent="CenterHUD/PauseScreen/DisplayMode/Fullscreen"]
+margin_right = 1949.0
+margin_bottom = 262.0
+rect_scale = Vector2( 0.148, 0.148 )
+focus_mode = 0
+enabled_focus_mode = 0
+icon = ExtResource( 9 )
+flat = true
+script = ExtResource( 10 )
+display_mode_id = 1
+
+[node name="Label" type="Label" parent="CenterHUD/PauseScreen/DisplayMode/Fullscreen"]
+margin_left = 47.0
+margin_right = 282.0
+margin_bottom = 39.0
+custom_fonts/font = ExtResource( 1 )
+text = "FULLSCREEN"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Borderless" type="Control" parent="CenterHUD/PauseScreen/DisplayMode"]
+margin_left = 975.96
+margin_right = 1015.96
+margin_bottom = 40.0
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="Radio" type="Button" parent="CenterHUD/PauseScreen/DisplayMode/Borderless"]
+margin_right = 1983.0
+margin_bottom = 262.0
+rect_scale = Vector2( 0.148, 0.148 )
+focus_mode = 0
+enabled_focus_mode = 0
+icon = ExtResource( 9 )
+flat = true
+script = ExtResource( 10 )
+display_mode_id = 2
+
+[node name="Label" type="Label" parent="CenterHUD/PauseScreen/DisplayMode/Borderless"]
+margin_left = 46.945
+margin_right = 256.945
+margin_bottom = 39.0
+custom_fonts/font = ExtResource( 1 )
+text = "BORDERLESS"
 __meta__ = {
 "_edit_use_anchors_": false
 }

@@ -6,7 +6,6 @@ const POINTS_PER_TICK : int = 10
 const POINTS_PER_ENEMY : int = 1000
 
 # Constants (difficulty)
-
 const BASE_TIME_BETWEEN_ENEMIES : float = 0.60
 const MIN_TIME_BETWEEN_ENEMIES : float = 0.15
 const TIME_FOR_MAX_DIFFICULTY : float = 120.0
