@@ -16,13 +16,15 @@ func _ready():
     lifespan_timer.start(BULLET_LIFESPAN)
 
 func _process(delta):
-    if is_inside_tree():
-        keep_alive_if_inbounds()
-        process_movement(delta)
-        attempt_damage_enemies()
+    if !is_inside_tree():
+        return
         
-        if lifespan_timer.time_left == 0:
-            self_destruct()
+    keep_alive_if_inbounds()
+    process_movement(delta)
+    attempt_damage_enemies()
+    
+    if lifespan_timer.time_left == 0:
+        self_destruct()
 
 func process_movement(delta):
     var player = the_world.get_player()
@@ -32,6 +34,9 @@ func process_movement(delta):
         var closest_distance : float = -1
         
         for area in areas:
+            if !area.is_inside_tree():
+                continue
+                
             var distance = global_position.distance_to(area.global_position)
             if distance < closest_distance or closest_distance < 0:
                 closest_distance = distance
@@ -62,10 +67,12 @@ func attempt_damage_enemies():
         self_destruct()
         
 func keep_alive_if_inbounds():
-    var screen_size = interface.get_effective_screen_size()
+    var visible_pos =  interface.get_visible_world_position()
+    var top_left = visible_pos[0]
+    var bot_right = visible_pos[1]
     
-    if global_position.x > 0 and global_position.x < screen_size.x:
-        if global_position.y > 0 and global_position.y < screen_size.y:
+    if global_position.x > top_left.x and global_position.x < bot_right.x:
+        if global_position.y > top_left.y and global_position.y < bot_right.y:
             lifespan_timer.start(BULLET_LIFESPAN)
         
 func self_destruct():

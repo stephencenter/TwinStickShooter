@@ -3,8 +3,8 @@ extends CanvasLayer
 var SETTINGS : Dictionary = {
     "aspect_ratio": 0,
     "resolution_id": 2,
-    "resolution_x": 1600,
-    "resolution_y": 900,
+    "resolution_x": 1366,
+    "resolution_y": 768,
     "display_mode": 0
 }
 
@@ -27,7 +27,7 @@ func _process(_delta):
     use_settings()
     update_fps_counter()
     align_ui_elements()
-
+    
 func toggle_pause():
     var tree = get_tree()
     tree.paused = !tree.paused
@@ -45,8 +45,8 @@ func toggle_pause():
 func align_ui_elements():
     var internal_x = ProjectSettings.get_setting("display/window/size/width")
     var internal_y = ProjectSettings.get_setting("display/window/size/height")
-    var effective_x = get_effective_screen_size().x
-    var effective_y = get_effective_screen_size().y
+    var effective_x = get_viewport().get_visible_rect().size.x
+    var effective_y = get_viewport().get_visible_rect().size.y
     
     $Centered.global_position.x = 0.5*(effective_x - internal_x)
     $Centered.global_position.y = 0.5*(effective_y - internal_y)
@@ -102,20 +102,23 @@ func get_temp_setting(key : String):
     
 func set_temp_setting(key : String, value):
     temp_settings[key] = value
+
+func get_visible_world_position() -> Array:
+    # Returns the global_position of the top-left and bottom-right
+    # corners of the visible world space as an array.
+    # index 0 is top-left, index 1 is bot-right
+    var world_size = get_viewport().get_visible_rect().size
     
-func get_effective_screen_size() -> Vector2:
-    var internal_x = ProjectSettings.get_setting("display/window/size/width")
-    var internal_y = ProjectSettings.get_setting("display/window/size/height")
-    var visual = OS.get_window_size()
+    if the_world.is_player_alive():
+        var player_pos = the_world.get_player().global_position
+        var screen_pos = the_world.get_player_screen_position()
+        var top_left = player_pos - screen_pos
+        var bot_right = top_left + world_size
+        
+        return [top_left, bot_right]
     
-    var internal_aspect = float(internal_x)/float(internal_y)
-    var visual_aspect = visual.x/visual.y
-    var aspect_ratio = visual_aspect/internal_aspect
-    
-    var effective_x = max(aspect_ratio*internal_x, internal_x)
-    var effective_y = max(internal_y/aspect_ratio, internal_y)
-    return Vector2(effective_x, effective_y)
-  
+    return [Vector2(0, 0), world_size]
+
 func center_window():    
     var screen_size = OS.get_screen_size()
     var window_size = OS.get_window_size()

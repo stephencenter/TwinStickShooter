@@ -10,24 +10,23 @@ const JOY_LEFT_DEADZONE : float = 0.05
 const JOY_RIGHT_DEADZONE : float = 0.5
 const JOY_CROSSHAIR_DISTANCE : float = 80.0
 
-var current_velocity : Vector2
-var movement_vector : Vector2
-var current_aim : Vector2
-var aim_vector : Vector2
-var aimed_mouse : bool = false
-
 onready var bullet_scene = load("res://Scenes/Bullet.tscn")
 onready var pf_timer : Timer = $PrimaryFireTimer
 onready var collection_radius : Area2D = $CollectionRadius
 onready var joy_crosshair : Sprite = $Crosshair
 onready var interface : CanvasLayer = get_tree().get_root().get_node("World/Interface")
-
 onready var powerup_timers = {
     0: $PowerupTimers/SurroundTimer,
     1: $PowerupTimers/BarrierTimer,
     2: $PowerupTimers/MultishotTimer,
     3: $PowerupTimers/HomingTimer
 }
+
+var current_velocity : Vector2
+var movement_vector : Vector2
+var current_aim : Vector2
+var aim_vector : Vector2
+var aimed_mouse : bool = false
 
 # Updates
 func _ready():
@@ -53,11 +52,11 @@ func process_input(_delta):
     aim_vector = get_aim_joystick()
     
     if Input.get_mouse_mode() == Input.MOUSE_MODE_VISIBLE:
-        aim_vector = get_viewport().get_mouse_position() - global_position
-    
+        aim_vector = get_global_mouse_position() - global_position
+
     if pf_timer.time_left == 0:
         action_primary_fire()
-
+    
 func process_movement(delta):
     movement_vector = movement_vector*PLAYER_MAX_SPEED
     
@@ -90,10 +89,10 @@ func process_rotation(delta):
         global_rotation += PLAYER_TURN_SPEED*delta
 
 func clamp_position():
-    var screen_size = interface.get_effective_screen_size()
-    global_position.x = clamp(global_position.x, 0, screen_size.x)
-    global_position.y = clamp(global_position.y, 0, screen_size.y)
-
+    var visual_size = get_viewport().get_visible_rect().size
+    global_position.x = clamp(global_position.x, 0, visual_size.x)
+    global_position.y = clamp(global_position.y, 0, visual_size.y)    
+    
 func attempt_collect_powerups():
     var areas = collection_radius.get_overlapping_areas()
     if !areas.empty():

@@ -271,7 +271,10 @@ __meta__ = {
 [node name="SuccessTimer" type="Timer" parent="Centered/PauseScreen"]
 one_shot = true
 
-[node name="TopLeft" type="Node2D" parent="."]
+[node name="TopLeft" type="Control" parent="."]
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="CurrentScore" type="Label" parent="TopLeft"]
 margin_left = 6.0

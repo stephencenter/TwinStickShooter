@@ -187,7 +187,7 @@ pause={
 
 [network]
 
-limits/debugger_stdout/max_chars_per_second=256000
+limits/debugger_stdout/max_chars_per_second=1024000
 
 [rendering]
 

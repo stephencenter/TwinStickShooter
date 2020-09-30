@@ -72,14 +72,18 @@ func update_hud():
     var string_time : String = "%02d:%02d" % [minutes, seconds]
     $Interface/TopRight/ElapsedTime.set_text("TIME: %s" % string_time)
     
-func start_new_game():    
+func start_new_game():
+    # Generate new RNG seed
+    randomize()
+     
     # Clear objects
     for object in object_container.get_children():
         object_container.remove_child(object)
     
     # Spawn Player
     var player_obj = player_scene.instance()
-    player_obj.global_position = interface.get_effective_screen_size()/2
+    print(get_viewport().get_visible_rect().size)
+    player_obj.global_position = get_viewport().get_visible_rect().size/2
     object_container.add_child(player_obj)
     
     # Reset score
@@ -103,27 +107,37 @@ func get_player():
         return object_container.get_node("Player")
     return null
 
+func get_player_screen_position():
+    if is_player_alive():
+        return get_player().get_global_transform_with_canvas().origin
+    return Vector2.ZERO
+
 # Enemy spawner
 func get_enemy_spawnpoint(chosen_side : String) -> Vector2:
     # This chooses a random point along the specified edge of the screen.
     # This is used to determine where to spawn enemies
     # Margin ensures that enemies won't spawn in the corners
     var deadzone = 0.1
-    var screen_size = interface.get_effective_screen_size()
-    var chosen_x = rand_range(screen_size.x*deadzone, screen_size.x*(1 - deadzone))
-    var chosen_y = rand_range(screen_size.y*deadzone, screen_size.y*(1 - deadzone))
+    var visible_pos = interface.get_visible_world_position()
+    var world_size = get_viewport().get_visible_rect().size
+    var min_x = visible_pos[0].x
+    var min_y = visible_pos[0].y
+    var max_x = visible_pos[1].x
+    var max_y = visible_pos[1].y
+    
+    var chosen_x = rand_range(min_x + max_x*deadzone, max_x*(1 - deadzone))
+    var chosen_y = rand_range(min_y + max_y*deadzone, max_y*(1 - deadzone))
     
     var buffer = 0.1
     var spawn_point : Vector2
     if chosen_side == "up":
-        spawn_point = Vector2(chosen_x, -screen_size.y*buffer)  
-        spawn_point = Vector2(chosen_x, -screen_size.y*buffer)  
+        spawn_point = Vector2(chosen_x, min_y - world_size.y*buffer)  
     elif chosen_side == "down":
-        spawn_point = Vector2(chosen_x, screen_size.y*(1 + buffer))
+        spawn_point = Vector2(chosen_x, min_y + world_size.y*(1 + buffer))
     elif chosen_side == "left":
-        spawn_point = Vector2(-screen_size.x*buffer, chosen_y)
+        spawn_point = Vector2(min_x - world_size.x*buffer, chosen_y)
     else:
-        spawn_point = Vector2(screen_size.x*(1 + buffer), chosen_y)
+        spawn_point = Vector2(min_x + world_size.x*(1 + buffer), chosen_y)
         
     return spawn_point
 
@@ -199,10 +213,16 @@ func calculate_difficulty_log():
 
 # Powerup spawner
 func get_powerup_spawnpoint() -> Vector2:
-    var deadzone = 0.05
-    var screen_size = interface.get_effective_screen_size()
-    var chosen_x = rand_range(screen_size.x*deadzone, screen_size.x*(1 - deadzone))
-    var chosen_y = rand_range(screen_size.y*deadzone, screen_size.y*(1 - deadzone))
+    var deadzone = 0.1
+    var visible_pos = interface.get_visible_world_position()
+    var world_size = get_viewport().get_visible_rect().size
+    var min_x = visible_pos[0].x
+    var min_y = visible_pos[0].y
+    var max_x = visible_pos[1].x
+    var max_y = visible_pos[1].y
+    
+    var chosen_x = rand_range(min_x + max_x*deadzone, max_x*(1 - deadzone))
+    var chosen_y = rand_range(min_y + max_y*deadzone, max_y*(1 - deadzone))
     
     return Vector2(chosen_x, chosen_y)
 
