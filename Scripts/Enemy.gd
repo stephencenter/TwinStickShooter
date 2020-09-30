@@ -11,7 +11,7 @@ var current_velocity : Vector2
 onready var hitbox : Area2D = $Hitbox
 onready var lifespan_timer : Timer = $LifespanTimer
 onready var the_world : Node2D = get_tree().get_root().get_node("World")
-onready var interface : Control = the_world.get_node("Interface")
+onready var interface : CanvasLayer = the_world.get_node("Interface")
 
 func _ready():
     lifespan_timer.start(ENEMY_LIFESPAN)

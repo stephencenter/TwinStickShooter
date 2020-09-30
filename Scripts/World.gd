@@ -30,7 +30,7 @@ onready var points_timer : Timer = $AlivePointsTimer
 onready var difficulty_timer : Timer = $DifficultyTimer
 onready var powerup_spawn_timer : Timer = $PowerupSpawnTimer
 onready var object_container = $ObjectContainer
-onready var interface : Control = $Interface
+onready var interface : CanvasLayer = $Interface
 
 # Scenes
 onready var enemy_to_spawn = load("res://Scenes/Enemy.tscn")
@@ -65,16 +65,13 @@ func _process(_delta):
     update_hud()
 
 func update_hud():
-    $Interface/CurrentScore.set_text("SCORE: %s" % current_score)
+    $Interface/CenterHUD/CurrentScore.set_text("SCORE: %s" % current_score)
     
     var elapsed_time = current_time - start_time
     var minutes = elapsed_time / 60
     var seconds = elapsed_time % 60
     var string_time : String = "%02d:%02d" % [minutes, seconds]
-    $Interface/ElapsedTime.set_text("TIME: %s" % string_time)
-    
-    var fps = Engine.get_frames_per_second()
-    $Interface/Framerate.set_text("%s FPS" % fps)
+    $Interface/CenterHUD/ElapsedTime.set_text("TIME: %s" % string_time)
     
 func start_new_game():    
     # Clear objects
@@ -106,7 +103,7 @@ func get_player():
     if is_player_alive():
         return object_container.get_node("Player")
     return null
-    
+
 # Enemy spawner
 func get_enemy_spawnpoint(chosen_side : String) -> Vector2:
     # This chooses a random point along the specified edge of the screen.

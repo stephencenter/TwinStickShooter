@@ -20,7 +20,7 @@ onready var bullet_scene = load("res://Scenes/Bullet.tscn")
 onready var pf_timer : Timer = $PrimaryFireTimer
 onready var collection_radius : Area2D = $CollectionRadius
 onready var joy_crosshair : Sprite = $Crosshair
-onready var interface : Control = get_tree().get_root().get_node("World/Interface")
+onready var interface : CanvasLayer = get_tree().get_root().get_node("World/Interface")
 
 onready var powerup_timers = {
     0: $PowerupTimers/SurroundTimer,
@@ -45,7 +45,7 @@ func _input(event):
         if Input.get_mouse_mode() == Input.MOUSE_MODE_HIDDEN:
             get_viewport().warp_mouse(joy_crosshair.global_position)
             
-        enable_mouse_cursor()
+        interface.enable_mouse_cursor()
         aimed_mouse = true
     
 func process_input(_delta):
@@ -110,14 +110,6 @@ func cancel_powerup(powerup : int):
 func has_powerup(powerup : int):
     return powerup_timers[powerup].time_left > 0
 
-func enable_joystick_cursor():
-    Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
-    joy_crosshair.visible = true
-    
-func enable_mouse_cursor():
-    Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-    joy_crosshair.visible = false
-
 func update_crosshair_position():
     var angle_vec = Vector2(cos(global_rotation), sin(global_rotation))
     joy_crosshair.global_position = global_position + angle_vec*JOY_CROSSHAIR_DISTANCE
@@ -160,7 +152,7 @@ func get_aim_joystick() -> Vector2:
     if aim_vec.length() < JOY_RIGHT_DEADZONE:
         return Vector2.ZERO
         
-    enable_joystick_cursor()
+    interface.enable_joystick_cursor()
     return aim_vec.normalized()
 
 # Actions
