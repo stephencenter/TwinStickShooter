@@ -9,11 +9,12 @@ var SETTINGS : Dictionary = {
 }
 
 var temp_settings : Dictionary
-
-onready var the_world = get_tree().get_root().get_node("World")
 var previous_ratio_id = -1
 var previous_reso_id = -1
 var previous_dm = -1
+
+onready var the_world = get_tree().get_root().get_node("World")
+onready var pause_screen = $CenterHUD/PauseScreen
 
 func _ready():
     temp_settings = SETTINGS.duplicate()
@@ -29,11 +30,13 @@ func _process(_delta):
 func toggle_pause():
     var tree = get_tree()
     tree.paused = !tree.paused
-    $CenterHUD/PauseScreen.visible = tree.paused
+    pause_screen.visible = tree.paused
     
     if tree.paused:
         enable_mouse_cursor()
         temp_settings = SETTINGS.duplicate()
+        pause_screen.current_node = pause_screen.aspect_node
+        pause_screen.place_cursor_on_current_node()
         
     else:
         temp_settings = {}

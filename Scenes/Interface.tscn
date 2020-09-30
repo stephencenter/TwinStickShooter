@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://Fonts/hud_font.tres" type="DynamicFont" id=1]
 [ext_resource path="res://Fonts/hud_font_small.tres" type="DynamicFont" id=2]
@@ -10,6 +10,8 @@
 [ext_resource path="res://Scripts/SettingsMenu/Resume.gd" type="Script" id=8]
 [ext_resource path="res://Sprites/radio_off.png" type="Texture" id=9]
 [ext_resource path="res://Scripts/SettingsMenu/DisplayMode.gd" type="Script" id=10]
+[ext_resource path="res://Scripts/SettingsMenu/PauseScreen.gd" type="Script" id=11]
+[ext_resource path="res://Sprites/arrow.png" type="Texture" id=12]
 
 [node name="Interface" type="CanvasLayer"]
 pause_mode = 2
@@ -61,11 +63,12 @@ margin_left = 147.598
 margin_top = 71.71
 margin_right = 1747.59
 margin_bottom = 971.71
+script = ExtResource( 11 )
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Aspect Ratio" type="Control" parent="CenterHUD/PauseScreen"]
+[node name="AspectRatio" type="Control" parent="CenterHUD/PauseScreen"]
 margin_left = 43.0
 margin_top = 72.0
 margin_right = 83.0
@@ -75,17 +78,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="CenterHUD/PauseScreen/Aspect Ratio"]
-margin_right = 283.0
-margin_bottom = 45.0
-custom_fonts/font = ExtResource( 1 )
-text = "ASPECT RATIO:"
-valign = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Selector" type="OptionButton" parent="CenterHUD/PauseScreen/Aspect Ratio"]
+[node name="Clickable" type="OptionButton" parent="CenterHUD/PauseScreen/AspectRatio"]
 margin_left = 310.0
 margin_right = 560.0
 margin_bottom = 45.0
@@ -95,13 +88,45 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="Label" type="Label" parent="CenterHUD/PauseScreen/AspectRatio"]
+margin_right = 283.0
+margin_bottom = 45.0
+custom_fonts/font = ExtResource( 1 )
+text = "ASPECT RATIO:"
+valign = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ArrowLeft" type="Sprite" parent="CenterHUD/PauseScreen/AspectRatio"]
+visible = false
+position = Vector2( 293, 22.5 )
+scale = Vector2( 0.1, 0.1 )
+texture = ExtResource( 12 )
+
+[node name="ArrowRight" type="Sprite" parent="CenterHUD/PauseScreen/AspectRatio"]
+visible = false
+position = Vector2( 575, 22.5 )
+rotation = 3.14159
+scale = Vector2( 0.1, 0.1 )
+texture = ExtResource( 12 )
+
 [node name="Resolution" type="Control" parent="CenterHUD/PauseScreen"]
 margin_left = 43.0
 margin_top = 149.0
 margin_right = 83.0
 margin_bottom = 189.0
 __meta__ = {
-"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="Clickable" type="OptionButton" parent="CenterHUD/PauseScreen/Resolution"]
+margin_left = 310.0
+margin_right = 560.0
+margin_bottom = 45.0
+custom_fonts/font = ExtResource( 1 )
+script = ExtResource( 6 )
+__meta__ = {
 "_edit_use_anchors_": false
 }
 
@@ -115,15 +140,18 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Selector" type="OptionButton" parent="CenterHUD/PauseScreen/Resolution"]
-margin_left = 310.0
-margin_right = 560.0
-margin_bottom = 45.0
-custom_fonts/font = ExtResource( 1 )
-script = ExtResource( 6 )
-__meta__ = {
-"_edit_use_anchors_": false
-}
+[node name="ArrowLeft" type="Sprite" parent="CenterHUD/PauseScreen/Resolution"]
+visible = false
+position = Vector2( 293, 21.5 )
+scale = Vector2( 0.1, 0.1 )
+texture = ExtResource( 12 )
+
+[node name="ArrowRight" type="Sprite" parent="CenterHUD/PauseScreen/Resolution"]
+visible = false
+position = Vector2( 575, 21.5 )
+rotation = -3.14159
+scale = Vector2( 0.1, 0.1 )
+texture = ExtResource( 12 )
 
 [node name="DisplayMode" type="Control" parent="CenterHUD/PauseScreen"]
 margin_left = 43.0
@@ -153,7 +181,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Radio" type="Button" parent="CenterHUD/PauseScreen/DisplayMode/Windowed"]
+[node name="Clickable" type="Button" parent="CenterHUD/PauseScreen/DisplayMode/Windowed"]
 margin_right = 1767.0
 margin_bottom = 262.0
 rect_scale = Vector2( 0.148, 0.148 )
@@ -182,7 +210,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Radio" type="Button" parent="CenterHUD/PauseScreen/DisplayMode/Fullscreen"]
+[node name="Clickable" type="Button" parent="CenterHUD/PauseScreen/DisplayMode/Fullscreen"]
 margin_right = 1949.0
 margin_bottom = 262.0
 rect_scale = Vector2( 0.148, 0.148 )
@@ -212,7 +240,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Radio" type="Button" parent="CenterHUD/PauseScreen/DisplayMode/Borderless"]
+[node name="Clickable" type="Button" parent="CenterHUD/PauseScreen/DisplayMode/Borderless"]
 margin_right = 1983.0
 margin_bottom = 262.0
 rect_scale = Vector2( 0.148, 0.148 )
@@ -233,11 +261,15 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Apply" type="Button" parent="CenterHUD/PauseScreen"]
+[node name="Apply" type="Control" parent="CenterHUD/PauseScreen"]
 margin_left = 356.0
 margin_top = 780.0
-margin_right = 641.0
-margin_bottom = 861.0
+margin_right = 396.0
+margin_bottom = 820.0
+
+[node name="Clickable" type="Button" parent="CenterHUD/PauseScreen/Apply"]
+margin_right = 285.0
+margin_bottom = 81.0
 custom_fonts/font = ExtResource( 1 )
 text = "APPLY"
 script = ExtResource( 7 )
@@ -245,11 +277,15 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Resume" type="Button" parent="CenterHUD/PauseScreen"]
+[node name="Resume" type="Control" parent="CenterHUD/PauseScreen"]
 margin_left = 43.0
 margin_top = 780.0
-margin_right = 328.0
-margin_bottom = 861.0
+margin_right = 83.0
+margin_bottom = 820.0
+
+[node name="Clickable" type="Button" parent="CenterHUD/PauseScreen/Resume"]
+margin_right = 285.0
+margin_bottom = 81.0
 custom_fonts/font = ExtResource( 1 )
 text = "RESUME"
 script = ExtResource( 8 )

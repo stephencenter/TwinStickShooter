@@ -1,8 +1,8 @@
 extends Button
 
 onready var interface = get_tree().get_root().get_node("World/Interface")
-onready var success_timer = get_parent().get_node("SuccessTimer")
-onready var success_label = get_parent().get_node("SuccessLabel")
+onready var success_timer = get_parent().get_parent().get_node("SuccessTimer")
+onready var success_label = get_parent().get_parent().get_node("SuccessLabel")
 
 func _process(_delta):
     if success_timer.time_left == 0 or !get_tree().paused:
