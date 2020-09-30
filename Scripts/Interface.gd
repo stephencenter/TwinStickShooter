@@ -47,10 +47,11 @@ func use_settings():
         previous_ratio_id = SETTINGS["aspect_ratio"]
         previous_reso_id = SETTINGS["resolution_id"]
         
-        OS.set_window_size(desired_size)
         if cfg["resolution_x"] < screen_size.x and cfg["resolution_y"] < screen_size.y:
             OS.window_maximized = false
-            center_window()
+        
+        OS.set_window_size(desired_size)
+        center_window()
 
 func apply_temp_settings():
     SETTINGS = temp_settings.duplicate()
