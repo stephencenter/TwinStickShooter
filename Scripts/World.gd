@@ -29,6 +29,7 @@ onready var difficulty_timer : Timer = $DifficultyTimer
 onready var powerup_spawn_timer : Timer = $PowerupSpawnTimer
 onready var object_container = $ObjectContainer
 onready var interface : CanvasLayer = $Interface
+onready var background : TextureRect = $Background/Sprite
 
 # Scenes
 onready var enemy_to_spawn = load("res://Scenes/Enemy.tscn")
@@ -52,24 +53,14 @@ func _process(_delta):
         if powerup_spawn_timer.time_left == 0:
             spawn_powerup()
             powerup_spawn_timer.start(TIME_BETWEEN_POWERUPS)
-        
-        current_time = OS.get_unix_time()
+            
         reward_alive_points()
         
     else:
         if Input.is_action_just_pressed("new_game"):
             start_new_game()
             
-    update_hud()
-
-func update_hud():
-    $Interface/TopLeft/CurrentScore.set_text("SCORE: %s" % current_score)
-    
-    var elapsed_time = current_time - start_time
-    var minutes = elapsed_time / 60
-    var seconds = elapsed_time % 60
-    var string_time : String = "%02d:%02d" % [minutes, seconds]
-    $Interface/TopRight/ElapsedTime.set_text("TIME: %s" % string_time)
+    update_background_size()
     
 func start_new_game():
     # Generate new RNG seed
@@ -231,3 +222,7 @@ func spawn_powerup():
     new_powerup.set_powerup_position(spawn_point)
     previous_powerup = new_powerup.choose_powerup_type(previous_powerup)
     new_powerup.set_powerup_type(previous_powerup)
+
+func update_background_size():
+    var world_size = get_viewport().get_visible_rect().size
+    background.rect_size = (world_size - background.rect_position)/background.rect_scale

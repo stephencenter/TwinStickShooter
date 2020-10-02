@@ -15,6 +15,8 @@ var previous_dm = -1
 
 onready var the_world = get_tree().get_root().get_node("World")
 onready var pause_screen = $Centered/PauseScreen
+onready var buff_icon_scene = load("res://Scenes/TimedBuffIcon.tscn")
+onready var buff_icons = $BotRight/TimedBuffIcons
 
 func _ready():
     temp_settings = SETTINGS.duplicate()
@@ -27,6 +29,15 @@ func _process(_delta):
     use_settings()
     update_fps_counter()
     align_ui_elements()
+    update_hud_text()
+    
+func update_hud_text():
+    $TopLeft/CurrentScore.set_text("SCORE: %s" % the_world.current_score)
+    var elapsed_time = OS.get_unix_time() - the_world.start_time
+    var minutes = elapsed_time / 60
+    var seconds = elapsed_time % 60
+    var string_time : String = "%02d:%02d" % [minutes, seconds]
+    $TopRight/ElapsedTime.set_text("TIME: %s" % string_time)
     
 func toggle_pause():
     var tree = get_tree()
@@ -53,6 +64,8 @@ func align_ui_elements():
     $TopRight.rect_global_position.x = effective_x - internal_x
     $BotLeft.rect_global_position.y = effective_y - internal_y
     $TopCenter.rect_global_position.x = 0.5*(effective_x - internal_x)
+    $BotRight.rect_global_position.x =  effective_x - internal_x
+    $BotRight.rect_global_position.y =  effective_y - internal_y
     
 func use_settings():        
     # Set display mode
@@ -137,3 +150,12 @@ func enable_mouse_cursor():
 
 func update_fps_counter():
     $BotLeft/Framerate.set_text("%s FPS" % Engine.get_frames_per_second())
+
+func create_buff_icon(powerup : int):
+    for icon in buff_icons.get_children():
+        if icon.powerup_id == powerup:
+            return
+            
+    var buff_icon = buff_icon_scene.instance()
+    buff_icon.powerup_id = powerup
+    buff_icons.add_child(buff_icon)

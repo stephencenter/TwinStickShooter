@@ -110,14 +110,18 @@ func attempt_collect_powerups():
         if powerup.get_parent() != null:
             powerup_timers[powerup.powerup_type].start(POWERUP_DURATION)
             
+        interface.create_buff_icon(powerup.powerup_type)
         powerup.self_destruct()
         
 func cancel_powerup(powerup : int):
     powerup_timers[powerup].stop()
     
-func has_powerup(powerup : int):
+func has_powerup(powerup : int) -> bool:
     return powerup_timers[powerup].time_left > 0
 
+func get_powerup_time_remaining(powerup : int) -> float:
+    return powerup_timers[powerup].time_left
+     
 func update_crosshair_position():
     var angle_vec = Vector2(cos(global_rotation), sin(global_rotation))
     joy_crosshair.global_position = global_position + angle_vec*JOY_CROSSHAIR_DISTANCE

@@ -27,10 +27,10 @@ one_shot = true
 z_index = -2
 
 [node name="Sprite" type="TextureRect" parent="Background"]
-margin_left = -7.07104
-margin_top = -10.9602
-margin_right = 7992.93
-margin_bottom = 4489.04
+margin_left = -400.0
+margin_top = -400.0
+margin_right = 10480.0
+margin_bottom = 7120.0
 rect_scale = Vector2( 0.25, 0.25 )
 texture = ExtResource( 3 )
 expand = true

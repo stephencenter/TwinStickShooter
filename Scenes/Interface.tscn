@@ -379,3 +379,19 @@ valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="BotRight" type="Control" parent="."]
+margin_right = 40.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TimedBuffIcons" type="Control" parent="BotRight"]
+margin_left = 1836.0
+margin_top = 995.0
+margin_right = 1876.0
+margin_bottom = 1035.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
