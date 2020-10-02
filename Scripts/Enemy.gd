@@ -3,7 +3,8 @@ extends Node2D
 const ENEMY_MAX_HEALTH : int = 3
 const ENEMY_MAX_SPEED : float = 167.0
 const ENEMY_MIN_SPEED : float = 100.0
-const ENEMY_LIFESPAN : float = 2.0
+const ENEMY_LIFESPAN : float = 5.0
+const ENEMY_ATTACK_DAMAGE : int = 1
 
 onready var hitbox : Area2D = $Hitbox
 onready var lifespan_timer : Timer = $LifespanTimer
@@ -40,7 +41,7 @@ func attempt_damage_player():
     for area in hitbox.get_overlapping_areas():
         var entity = area.get_parent()
         if entity == the_world.get_player():
-            entity.self_destruct()
+            entity.take_damage_from_enemy(ENEMY_ATTACK_DAMAGE)
 
 func set_enemy_velocity(direction : Vector2):
     direction = direction.normalized()

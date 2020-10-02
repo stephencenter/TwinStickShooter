@@ -10,7 +10,6 @@ const BASE_TIME_BETWEEN_ENEMIES : float = 0.60
 const MIN_TIME_BETWEEN_ENEMIES : float = 0.15
 const TIME_FOR_MAX_DIFFICULTY : float = 120.0
 const TIME_BETWEEN_DIFFICULTY_TICKS : float = 0.016666666666667
-const TICKS_FOR_MAX_DIFFICULTY : int = int(TIME_FOR_MAX_DIFFICULTY/TIME_BETWEEN_DIFFICULTY_TICKS)
 
 # Constants (powerups)
 const TIME_BETWEEN_POWERUPS : float = 20.0
@@ -82,7 +81,6 @@ func start_new_game():
     
     # Spawn Player
     var player_obj = player_scene.instance()
-    print(get_viewport().get_visible_rect().size)
     player_obj.global_position = get_viewport().get_visible_rect().size/2
     object_container.add_child(player_obj)
     
@@ -199,14 +197,14 @@ func increase_difficulty():
         time_between_enemies = MIN_TIME_BETWEEN_ENEMIES
         
 func calculate_difficulty_linear():
-    var abc = TICKS_FOR_MAX_DIFFICULTY
+    var abc = TIME_FOR_MAX_DIFFICULTY/TIME_BETWEEN_DIFFICULTY_TICKS
     var difference = BASE_TIME_BETWEEN_ENEMIES - MIN_TIME_BETWEEN_ENEMIES
     var quotient = abc/difference
     
     return BASE_TIME_BETWEEN_ENEMIES - (difficulty_ticks/quotient)
     
 func calculate_difficulty_log():
-    var abc = TICKS_FOR_MAX_DIFFICULTY
+    var abc = TIME_FOR_MAX_DIFFICULTY/TIME_BETWEEN_DIFFICULTY_TICKS
     var degree = BASE_TIME_BETWEEN_ENEMIES - MIN_TIME_BETWEEN_ENEMIES
     var log_base = pow(abc, 1.0/degree)
     return BASE_TIME_BETWEEN_ENEMIES - log(difficulty_ticks + 1)/log(log_base)
@@ -215,7 +213,6 @@ func calculate_difficulty_log():
 func get_powerup_spawnpoint() -> Vector2:
     var deadzone = 0.1
     var visible_pos = interface.get_visible_world_position()
-    var world_size = get_viewport().get_visible_rect().size
     var min_x = visible_pos[0].x
     var min_y = visible_pos[0].y
     var max_x = visible_pos[1].x

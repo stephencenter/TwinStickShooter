@@ -1,5 +1,6 @@
 extends Node2D
 
+const PLAYER_MAX_HEALTH : int = 1
 const PLAYER_MAX_SPEED : float = 250.0
 const PLAYER_ACCELERATION : float = 0.2
 const PLAYER_DECELERATION : float = 0.1
@@ -8,10 +9,14 @@ const PRIMARY_FIRE_CD : float = 0.1
 const POWERUP_DURATION : float = 10.0
 const JOY_LEFT_DEADZONE : float = 0.05
 const JOY_RIGHT_DEADZONE : float = 0.5
-const JOY_CROSSHAIR_DISTANCE : float = 80.0
+const JOY_CROSSHAIR_DISTANCE : float = 120.0
+const PLAYER_INVINCE_TIME : float = 1.5
+const PLAYER_FLICKER_TIME : float = 0.1
 
 onready var bullet_scene = load("res://Scenes/Bullet.tscn")
 onready var pf_timer : Timer = $PrimaryFireTimer
+onready var inv_timer : Timer = $InvincibilityTimer
+onready var flicker_timer : Timer = $SpriteFlickerTimer
 onready var collection_radius : Area2D = $CollectionRadius
 onready var joy_crosshair : Sprite = $Crosshair
 onready var interface : CanvasLayer = get_tree().get_root().get_node("World/Interface")
@@ -27,6 +32,7 @@ var movement_vector : Vector2
 var current_aim : Vector2
 var aim_vector : Vector2
 var aimed_mouse : bool = false
+var current_health : int = PLAYER_MAX_HEALTH
 
 # Updates
 func _ready():
@@ -38,6 +44,9 @@ func _process(delta):
     process_rotation(delta)
     update_crosshair_position()
     attempt_collect_powerups()
+    update_barrier_sprite()
+    invincibility_sprite_flicker()
+    check_for_death()
 
 func _input(event):
     if event is InputEventMouseMotion:
@@ -113,7 +122,34 @@ func update_crosshair_position():
     var angle_vec = Vector2(cos(global_rotation), sin(global_rotation))
     joy_crosshair.global_position = global_position + angle_vec*JOY_CROSSHAIR_DISTANCE
     joy_crosshair.global_rotation = 0
+
+func take_damage_from_enemy(damage_amount : int):
+    if inv_timer.time_left > 0:
+        return
+        
+    if has_powerup(1):
+        cancel_powerup(1)
+        
+    else:
+        current_health -= damage_amount
+        
+    inv_timer.start(PLAYER_INVINCE_TIME)
+    flicker_timer.start(PLAYER_FLICKER_TIME)
+
+func invincibility_sprite_flicker():
+    if inv_timer.time_left > 0:
+        if flicker_timer.time_left == 0:
+            $PlayerSprite.visible = !$PlayerSprite.visible
+            flicker_timer.start(PLAYER_FLICKER_TIME)
+        
+    else:
+        $PlayerSprite.visible = true
+        
     
+func check_for_death():
+    if current_health <= 0:
+        self_destruct()
+        
 # Helpers
 func get_movement_vector() -> Vector2:
     var move_vec : Vector2 = Vector2()
@@ -153,6 +189,9 @@ func get_aim_joystick() -> Vector2:
         
     interface.enable_joystick_cursor()
     return aim_vec.normalized()
+    
+func update_barrier_sprite():
+    $BarrierSprite.visible = powerup_timers[1].time_left > 0
 
 # Actions
 func action_primary_fire():
