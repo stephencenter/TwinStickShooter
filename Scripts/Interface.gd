@@ -48,10 +48,11 @@ func align_ui_elements():
     var effective_x = get_viewport().get_visible_rect().size.x
     var effective_y = get_viewport().get_visible_rect().size.y
     
-    $Centered.global_position.x = 0.5*(effective_x - internal_x)
-    $Centered.global_position.y = 0.5*(effective_y - internal_y)
-    $TopRight.global_position.x = effective_x - internal_x
-    $BotLeft.global_position.y = effective_y - internal_y
+    $Centered.rect_global_position.x = 0.5*(effective_x - internal_x)
+    $Centered.rect_global_position.y = 0.5*(effective_y - internal_y)
+    $TopRight.rect_global_position.x = effective_x - internal_x
+    $BotLeft.rect_global_position.y = effective_y - internal_y
+    $TopCenter.rect_global_position.x = 0.5*(effective_x - internal_x)
     
 func use_settings():        
     # Set display mode

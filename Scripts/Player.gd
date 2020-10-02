@@ -1,6 +1,6 @@
 extends Node2D
 
-const PLAYER_MAX_HEALTH : int = 1
+const PLAYER_MAX_HEALTH : int = 3
 const PLAYER_MAX_SPEED : float = 250.0
 const PLAYER_ACCELERATION : float = 0.2
 const PLAYER_DECELERATION : float = 0.1
@@ -132,6 +132,8 @@ func take_damage_from_enemy(damage_amount : int):
         
     else:
         current_health -= damage_amount
+        
+    current_health = int(max(0, current_health))
         
     inv_timer.start(PLAYER_INVINCE_TIME)
     flicker_timer.start(PLAYER_FLICKER_TIME)

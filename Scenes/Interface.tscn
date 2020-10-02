@@ -1,8 +1,9 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://Fonts/hud_font.tres" type="DynamicFont" id=1]
 [ext_resource path="res://Fonts/hud_font_small.tres" type="DynamicFont" id=2]
 [ext_resource path="res://Scripts/Interface.gd" type="Script" id=3]
+[ext_resource path="res://Sprites/healthbar_border.png" type="Texture" id=4]
 [ext_resource path="res://Scripts/SettingsMenu/AspectRatio.gd" type="Script" id=5]
 [ext_resource path="res://Scripts/SettingsMenu/Resolution.gd" type="Script" id=6]
 [ext_resource path="res://Scripts/SettingsMenu/Apply.gd" type="Script" id=7]
@@ -11,19 +12,25 @@
 [ext_resource path="res://Scripts/SettingsMenu/DisplayMode.gd" type="Script" id=10]
 [ext_resource path="res://Scripts/SettingsMenu/PauseScreen.gd" type="Script" id=11]
 [ext_resource path="res://Sprites/arrow.png" type="Texture" id=12]
+[ext_resource path="res://Sprites/healthbar_current.png" type="Texture" id=13]
+[ext_resource path="res://Sprites/healthbar_background.png" type="Texture" id=14]
+[ext_resource path="res://Scripts/HealthBar.gd" type="Script" id=15]
 
 [node name="Interface" type="CanvasLayer"]
 pause_mode = 2
 script = ExtResource( 3 )
 
-[node name="Centered" type="Node2D" parent="."]
+[node name="Centered" type="Control" parent="."]
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="PauseScreen" type="Panel" parent="Centered"]
 visible = false
-margin_left = 147.598
-margin_top = 71.71
-margin_right = 1747.59
-margin_bottom = 971.71
+margin_left = 160.0
+margin_top = 90.0
+margin_right = 1760.0
+margin_bottom = 990.0
 script = ExtResource( 11 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -272,9 +279,6 @@ __meta__ = {
 one_shot = true
 
 [node name="TopLeft" type="Control" parent="."]
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="CurrentScore" type="Label" parent="TopLeft"]
 margin_left = 6.0
@@ -287,7 +291,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="TopRight" type="Node2D" parent="."]
+[node name="TopRight" type="Control" parent="."]
 
 [node name="ElapsedTime" type="Label" parent="TopRight"]
 anchor_top = -0.00185185
@@ -303,7 +307,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="BotLeft" type="Node2D" parent="."]
+[node name="BotLeft" type="Control" parent="."]
 
 [node name="Framerate" type="Label" parent="BotLeft"]
 margin_left = 4.0
@@ -312,6 +316,66 @@ margin_right = 76.0
 margin_bottom = 1080.0
 custom_fonts/font = ExtResource( 2 )
 text = "60 FPS"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="TopCenter" type="Control" parent="."]
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HealthBar" type="Control" parent="TopCenter"]
+margin_left = 720.0
+margin_top = 6.752
+margin_right = 720.0
+margin_bottom = 6.752
+rect_scale = Vector2( 0.15, 0.15 )
+script = ExtResource( 15 )
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="Background" type="TextureRect" parent="TopCenter/HealthBar"]
+margin_left = 25.0
+margin_top = 23.0
+margin_right = 3175.0
+margin_bottom = 277.0
+texture = ExtResource( 14 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CurrentHealth" type="TextureRect" parent="TopCenter/HealthBar"]
+margin_left = 25.0
+margin_top = 23.0
+margin_right = 3175.0
+margin_bottom = 277.0
+texture = ExtResource( 13 )
+stretch_mode = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Border" type="TextureRect" parent="TopCenter/HealthBar"]
+margin_right = 2400.0
+margin_bottom = 300.0
+texture = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HealthLabel" type="Label" parent="TopCenter/HealthBar"]
+margin_left = 1240.0
+margin_top = 21.5
+margin_right = 1348.0
+margin_bottom = 60.5
+rect_scale = Vector2( 6.667, 6.667 )
+custom_fonts/font = ExtResource( 1 )
+text = "20/20"
+align = 1
+valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
