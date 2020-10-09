@@ -1,6 +1,6 @@
 extends Node2D
 
-const POWERUP_LIFESPAN : float = 8.0
+const POWERUP_LIFESPAN : float = 12.0
 const POWERUP_FLICKER_START = 3.0
 const POWERUP_FLICKER_TIME = 6.0
 

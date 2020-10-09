@@ -1,7 +1,7 @@
 extends Node2D
 
 const BULLET_TRAVEL_SPEED : float = 800.0
-const BULLET_LIFESPAN : float = 3.0
+const BULLET_LIFESPAN : float = 5.0
 const BULLET_DAMAGE : int = 1
 
 onready var lifespan_timer : Timer = $LifespanTimer

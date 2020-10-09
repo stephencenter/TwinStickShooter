@@ -5,7 +5,7 @@ const TIME_BETWEEN_POINTS : float = 0.02
 const POINTS_PER_TICK : int = 10
 
 # Constants (powerups)
-const TIME_BETWEEN_POWERUPS : float = 20.0
+const TIME_BETWEEN_POWERUPS : float = 16.0
 
 # Variables
 var current_score : int = 0
@@ -61,7 +61,7 @@ func start_new_game():
      
     # Clear objects
     for object in object_container.get_children():
-        object.queue_free()
+        object_container.remove_child(object)
     
     # Spawn Player
     var player_obj = player_scene.instance()

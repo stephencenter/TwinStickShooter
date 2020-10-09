@@ -1,7 +1,7 @@
 extends Node
 
 const BASE_TIME_BETWEEN_ENEMIES : float = 0.40
-const MIN_TIME_BETWEEN_ENEMIES : float = 0.075
+const MIN_TIME_BETWEEN_ENEMIES : float = 0.125
 const TIME_FOR_MAX_DIFFICULTY : float = 120.0
 const TIME_BETWEEN_DIFFICULTY_TICKS : float = 0.02
 
@@ -14,11 +14,15 @@ onready var difficulty_timer : Timer = $DifficultyTimer
 
 onready var jellybelly_timer : Timer = $JellybellySpawnTimer
 onready var jellybelly_scene = load("res://Scenes/Enemies/Jellybelly.tscn")
-const JELLYBELLY_TIME_MULTIPLIER : float = 1.0
+const JELLYBELLY_TIME_MULTIPLIER : float = 1.5
 
 onready var snakeray_scene = load("res://Scenes/Enemies/Snakeray.tscn")
 onready var snakeray_timer : Timer = $SnakeraySpawnTimer
 const SNAKERAY_TIME_MULTIPLIER : float = 20.0
+
+onready var tribot_scene = load("res://Scenes/Enemies/Tribot.tscn")
+onready var tribot_timer : Timer = $TribotSpawnTimer
+const TRIBOT_TIME_MULTIPLIER : float = 50.0
 
 func _process(_delta):        
     if the_game.is_player_alive():
@@ -30,6 +34,10 @@ func _process(_delta):
             spawn_snakeray()
             snakeray_timer.start(time_between_enemies*SNAKERAY_TIME_MULTIPLIER)
             
+        if tribot_timer.time_left == 0:
+            spawn_tribot()
+            tribot_timer.start(time_between_enemies*TRIBOT_TIME_MULTIPLIER)
+            
         if difficulty_timer.time_left == 0:
             increase_difficulty()
             difficulty_timer.start(TIME_BETWEEN_DIFFICULTY_TICKS)
@@ -39,6 +47,7 @@ func start_spawner():
     time_between_enemies = BASE_TIME_BETWEEN_ENEMIES
     jellybelly_timer.start(time_between_enemies*JELLYBELLY_TIME_MULTIPLIER)
     snakeray_timer.start(time_between_enemies*SNAKERAY_TIME_MULTIPLIER)
+    tribot_timer.start(time_between_enemies*TRIBOT_TIME_MULTIPLIER)
     difficulty_timer.start(TIME_BETWEEN_DIFFICULTY_TICKS)
     
 func increase_difficulty():
@@ -166,7 +175,7 @@ func get_snakeray_spawnpoint() -> Vector2:
 func get_snakeray_spawnangle(var spawnpoint : Vector2) -> Vector2:
     var player_pos = the_game.get_player().global_position
     return player_pos - spawnpoint
-    
+
 func spawn_snakeray():
     var spawn_point = get_snakeray_spawnpoint()
     var spawn_angle = get_snakeray_spawnangle(spawn_point)
@@ -174,4 +183,83 @@ func spawn_snakeray():
     var new_enemy = snakeray_scene.instance()
     new_enemy.set_initial_position(spawn_point)
     new_enemy.set_snake_velocity(spawn_angle)
+    the_game.add_new_object(new_enemy)
+
+func get_tribot_spawnside():
+    var options = [
+        ["topleft", "down"], ["topleft", "right"], 
+        ["botleft", "up"], ["botleft", "right"],
+        ["topright", "down"], ["topright", "left"],
+        ["botright", "up"], ["botright", "left"]
+    ]
+    
+    return options[randi() % options.size()]
+    
+func get_tribot_spawnpoint(var spawn_side : Array) -> Vector2:
+    var world_size = get_viewport().get_visible_rect().size
+    var corner = spawn_side[0]
+    var direction = spawn_side[1]
+    var margin = 0.05
+    
+    var spawnpoint : Vector2 = Vector2()
+    
+    if corner == "topleft":
+        if direction == "down":
+            spawnpoint.x = world_size.x*margin
+            spawnpoint.y = -world_size.y*margin
+        
+        elif direction == "right":
+            spawnpoint.x = -world_size.x*margin
+            spawnpoint.y = world_size.y*margin
+            
+    elif corner == "botleft":
+        if direction == "up":
+            spawnpoint.x = world_size.x*margin
+            spawnpoint.y = world_size.y*(1 + margin)
+            
+        elif direction == "right":
+            spawnpoint.x = -world_size.x*margin
+            spawnpoint.y = world_size.y*(1 - margin)
+    
+    elif corner == "topright":
+        if direction == "down":
+            spawnpoint.x = world_size.x*(1 - margin)
+            spawnpoint.y = -world_size.y*margin
+            
+        elif direction == "left":
+            spawnpoint.x = world_size.x*(1 + margin)
+            spawnpoint.y = world_size.y*margin
+            
+    else: #botright
+        if direction == "up":
+            spawnpoint.x = world_size.x*(1 - margin)
+            spawnpoint.y = world_size.y*(1 + margin)
+            
+        if direction == "left":
+            spawnpoint.x = world_size.x*(1 + margin)
+            spawnpoint.y = world_size.y*(1 - margin)
+            
+    return spawnpoint
+            
+func get_tribot_spawnangle(var direction) -> Vector2:
+    if direction == "up":
+        return Vector2(0, -1)
+        
+    elif direction == "down":
+        return Vector2(0, 1)
+        
+    elif direction == "left":
+        return Vector2(-1, 0)
+        
+    return Vector2(1, 0)
+        
+    
+func spawn_tribot():
+    var spawn_side = get_tribot_spawnside()
+    var spawn_point = get_tribot_spawnpoint(spawn_side)
+    var spawn_angle = get_tribot_spawnangle(spawn_side[1])
+    
+    var new_enemy = tribot_scene.instance()
+    new_enemy.set_initial_position(spawn_point)
+    new_enemy.set_tribot_velocity(spawn_angle)
     the_game.add_new_object(new_enemy)
