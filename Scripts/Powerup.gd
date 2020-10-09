@@ -26,7 +26,7 @@ func _ready():
 func _process(_delta):
     flicker_sprite()
     if lifespan_timer.time_left == 0:
-        self_destruct()
+        queue_free()
 
 # Methods
 func set_powerup_position(pos_vec : Vector2):
@@ -49,7 +49,3 @@ func flicker_sprite():
         if flicker_timer.time_left == 0:
             $Sprite.visible = !$Sprite.visible
             flicker_timer.start(lifespan_timer.time_left/POWERUP_FLICKER_TIME)
-            
-func self_destruct():
-    if is_inside_tree():
-        get_parent().remove_child(self)

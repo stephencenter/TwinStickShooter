@@ -1,6 +1,6 @@
 extends OptionButton
 
-onready var interface = get_tree().get_root().get_node("World/Interface")
+onready var config = get_tree().get_root().get_node("Game/SettingsManager")
 
 func _ready():
     add_item("16:9", 0)
@@ -8,7 +8,7 @@ func _ready():
     add_item("4:3", 2)
     add_item("21:9", 3)
     
-    select(interface.SETTINGS["aspect_ratio"])
+    select(config.get_setting("aspect_ratio"))
 
 func _process(_delta):
-    interface.set_temp_setting("aspect_ratio", get_selected_id())
+    config.set_temp_setting("aspect_ratio", get_selected_id())

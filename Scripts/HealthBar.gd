@@ -1,7 +1,7 @@
 extends Control
 
 onready var player : Node2D
-onready var the_world = get_tree().get_root().get_node("World")
+onready var the_world = get_tree().get_root().get_node("Game")
 onready var remaining_bar : TextureRect = $CurrentHealth
 onready var hbar_size : Vector2 = $Border.rect_size
 onready var hp_label : Label = $HealthLabel

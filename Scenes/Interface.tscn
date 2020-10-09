@@ -25,7 +25,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="PauseScreen" type="Panel" parent="Centered"]
+[node name="SettingsMenu" type="Panel" parent="Centered"]
 visible = false
 margin_left = 160.0
 margin_top = 90.0
@@ -36,7 +36,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="AspectRatio" type="Control" parent="Centered/PauseScreen"]
+[node name="AspectRatio" type="Control" parent="Centered/SettingsMenu"]
 margin_left = 43.0
 margin_top = 72.0
 margin_right = 83.0
@@ -46,7 +46,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Clickable" type="OptionButton" parent="Centered/PauseScreen/AspectRatio"]
+[node name="Clickable" type="OptionButton" parent="Centered/SettingsMenu/AspectRatio"]
 margin_left = 310.0
 margin_right = 560.0
 margin_bottom = 45.0
@@ -56,7 +56,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="Centered/PauseScreen/AspectRatio"]
+[node name="Label" type="Label" parent="Centered/SettingsMenu/AspectRatio"]
 margin_right = 283.0
 margin_bottom = 45.0
 custom_fonts/font = ExtResource( 1 )
@@ -66,20 +66,20 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ArrowLeft" type="Sprite" parent="Centered/PauseScreen/AspectRatio"]
+[node name="ArrowLeft" type="Sprite" parent="Centered/SettingsMenu/AspectRatio"]
 visible = false
 position = Vector2( 293, 22.5 )
 scale = Vector2( 0.1, 0.1 )
 texture = ExtResource( 12 )
 
-[node name="ArrowRight" type="Sprite" parent="Centered/PauseScreen/AspectRatio"]
+[node name="ArrowRight" type="Sprite" parent="Centered/SettingsMenu/AspectRatio"]
 visible = false
 position = Vector2( 575, 22.5 )
 rotation = 3.14159
 scale = Vector2( 0.1, 0.1 )
 texture = ExtResource( 12 )
 
-[node name="Resolution" type="Control" parent="Centered/PauseScreen"]
+[node name="Resolution" type="Control" parent="Centered/SettingsMenu"]
 margin_left = 43.0
 margin_top = 149.0
 margin_right = 83.0
@@ -88,7 +88,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Clickable" type="OptionButton" parent="Centered/PauseScreen/Resolution"]
+[node name="Clickable" type="OptionButton" parent="Centered/SettingsMenu/Resolution"]
 margin_left = 310.0
 margin_right = 560.0
 margin_bottom = 45.0
@@ -98,7 +98,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="Centered/PauseScreen/Resolution"]
+[node name="Label" type="Label" parent="Centered/SettingsMenu/Resolution"]
 margin_right = 283.0
 margin_bottom = 45.0
 custom_fonts/font = ExtResource( 1 )
@@ -108,20 +108,20 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="ArrowLeft" type="Sprite" parent="Centered/PauseScreen/Resolution"]
+[node name="ArrowLeft" type="Sprite" parent="Centered/SettingsMenu/Resolution"]
 visible = false
 position = Vector2( 293, 21.5 )
 scale = Vector2( 0.1, 0.1 )
 texture = ExtResource( 12 )
 
-[node name="ArrowRight" type="Sprite" parent="Centered/PauseScreen/Resolution"]
+[node name="ArrowRight" type="Sprite" parent="Centered/SettingsMenu/Resolution"]
 visible = false
 position = Vector2( 575, 21.5 )
 rotation = -3.14159
 scale = Vector2( 0.1, 0.1 )
 texture = ExtResource( 12 )
 
-[node name="DisplayMode" type="Control" parent="Centered/PauseScreen"]
+[node name="DisplayMode" type="Control" parent="Centered/SettingsMenu"]
 margin_left = 43.0
 margin_top = 226.0
 margin_right = 83.0
@@ -131,7 +131,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Label" type="Label" parent="Centered/PauseScreen/DisplayMode"]
+[node name="Label" type="Label" parent="Centered/SettingsMenu/DisplayMode"]
 margin_right = 283.0
 margin_bottom = 39.0
 custom_fonts/font = ExtResource( 1 )
@@ -140,7 +140,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Windowed" type="Control" parent="Centered/PauseScreen/DisplayMode"]
+[node name="Windowed" type="Control" parent="Centered/SettingsMenu/DisplayMode"]
 margin_left = 330.0
 margin_right = 370.0
 margin_bottom = 40.0
@@ -149,7 +149,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Clickable" type="Button" parent="Centered/PauseScreen/DisplayMode/Windowed"]
+[node name="Clickable" type="Button" parent="Centered/SettingsMenu/DisplayMode/Windowed"]
 margin_right = 1767.0
 margin_bottom = 262.0
 rect_scale = Vector2( 0.148, 0.148 )
@@ -159,7 +159,7 @@ icon = ExtResource( 9 )
 flat = true
 script = ExtResource( 10 )
 
-[node name="Label" type="Label" parent="Centered/PauseScreen/DisplayMode/Windowed"]
+[node name="Label" type="Label" parent="Centered/SettingsMenu/DisplayMode/Windowed"]
 margin_left = 46.945
 margin_right = 256.945
 margin_bottom = 39.0
@@ -169,7 +169,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Fullscreen" type="Control" parent="Centered/PauseScreen/DisplayMode"]
+[node name="Fullscreen" type="Control" parent="Centered/SettingsMenu/DisplayMode"]
 margin_left = 639.945
 margin_right = 679.945
 margin_bottom = 40.0
@@ -178,7 +178,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Clickable" type="Button" parent="Centered/PauseScreen/DisplayMode/Fullscreen"]
+[node name="Clickable" type="Button" parent="Centered/SettingsMenu/DisplayMode/Fullscreen"]
 margin_right = 1949.0
 margin_bottom = 262.0
 rect_scale = Vector2( 0.148, 0.148 )
@@ -189,7 +189,7 @@ flat = true
 script = ExtResource( 10 )
 display_mode_id = 1
 
-[node name="Label" type="Label" parent="Centered/PauseScreen/DisplayMode/Fullscreen"]
+[node name="Label" type="Label" parent="Centered/SettingsMenu/DisplayMode/Fullscreen"]
 margin_left = 47.0
 margin_right = 282.0
 margin_bottom = 39.0
@@ -199,7 +199,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Borderless" type="Control" parent="Centered/PauseScreen/DisplayMode"]
+[node name="Borderless" type="Control" parent="Centered/SettingsMenu/DisplayMode"]
 margin_left = 975.96
 margin_right = 1015.96
 margin_bottom = 40.0
@@ -208,7 +208,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Clickable" type="Button" parent="Centered/PauseScreen/DisplayMode/Borderless"]
+[node name="Clickable" type="Button" parent="Centered/SettingsMenu/DisplayMode/Borderless"]
 margin_right = 1983.0
 margin_bottom = 262.0
 rect_scale = Vector2( 0.148, 0.148 )
@@ -219,7 +219,7 @@ flat = true
 script = ExtResource( 10 )
 display_mode_id = 2
 
-[node name="Label" type="Label" parent="Centered/PauseScreen/DisplayMode/Borderless"]
+[node name="Label" type="Label" parent="Centered/SettingsMenu/DisplayMode/Borderless"]
 margin_left = 46.945
 margin_right = 256.945
 margin_bottom = 39.0
@@ -229,13 +229,13 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Apply" type="Control" parent="Centered/PauseScreen"]
+[node name="Apply" type="Control" parent="Centered/SettingsMenu"]
 margin_left = 356.0
 margin_top = 780.0
 margin_right = 396.0
 margin_bottom = 820.0
 
-[node name="Clickable" type="Button" parent="Centered/PauseScreen/Apply"]
+[node name="Clickable" type="Button" parent="Centered/SettingsMenu/Apply"]
 margin_right = 285.0
 margin_bottom = 81.0
 custom_fonts/font = ExtResource( 1 )
@@ -245,13 +245,13 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Resume" type="Control" parent="Centered/PauseScreen"]
+[node name="Resume" type="Control" parent="Centered/SettingsMenu"]
 margin_left = 43.0
 margin_top = 780.0
 margin_right = 83.0
 margin_bottom = 820.0
 
-[node name="Clickable" type="Button" parent="Centered/PauseScreen/Resume"]
+[node name="Clickable" type="Button" parent="Centered/SettingsMenu/Resume"]
 margin_right = 285.0
 margin_bottom = 81.0
 custom_fonts/font = ExtResource( 1 )
@@ -261,7 +261,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="SuccessLabel" type="Label" parent="Centered/PauseScreen"]
+[node name="SuccessLabel" type="Label" parent="Centered/SettingsMenu"]
 margin_left = 1034.96
 margin_top = 780.0
 margin_right = 1526.96
@@ -275,8 +275,15 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="SuccessTimer" type="Timer" parent="Centered/PauseScreen"]
+[node name="SuccessTimer" type="Timer" parent="Centered/SettingsMenu"]
 one_shot = true
+
+[node name="TitleScreen" type="Panel" parent="Centered"]
+visible = false
+margin_left = 261.194
+margin_top = 112.756
+margin_right = 1647.19
+margin_bottom = 958.756
 
 [node name="TopLeft" type="Control" parent="."]
 

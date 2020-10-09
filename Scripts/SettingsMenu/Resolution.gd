@@ -1,7 +1,7 @@
 extends OptionButton
 
 var current_aspect_ratio : int = -1
-onready var interface = get_tree().get_root().get_node("World/Interface")
+onready var config = get_tree().get_root().get_node("Game/SettingsManager")
 
 const RESOLUTION_LIST : Dictionary = {
     0: [[1280, 720], [1366, 768], [1600, 900], [1920, 1080], [2560, 1440], [3840, 2160]],
@@ -16,7 +16,7 @@ func _ready():
         current_aspect_ratio = ratio
         repopulate_resolution_list()
         
-    select(interface.get_setting("resolution_id"))
+    select(config.get_setting("resolution_id"))
     
 func _process(_delta):
     var ratio = get_current_aspect_ratio()
@@ -25,8 +25,8 @@ func _process(_delta):
         repopulate_resolution_list()
     
     var selected_resolution = RESOLUTION_LIST[current_aspect_ratio][get_selected_id()]
-    interface.set_temp_setting("resolution_x", selected_resolution[0])
-    interface.set_temp_setting("resolution_y", selected_resolution[1])
+    config.set_temp_setting("resolution_x", selected_resolution[0])
+    config.set_temp_setting("resolution_y", selected_resolution[1])
 
 func repopulate_resolution_list():
     clear()
@@ -40,14 +40,14 @@ func repopulate_resolution_list():
         index += 1
 
 func update_current_aspect_ratio():
-    if interface.temp_settings.has("aspect_ratio"):
-        current_aspect_ratio = interface.get_temp_setting("aspect_ratio")
+    if config.temp_settings.has("aspect_ratio"):
+        current_aspect_ratio = config.get_temp_setting("aspect_ratio")
     else:
-        current_aspect_ratio = interface.get_setting["aspect_ratio"]
+        current_aspect_ratio = config.get_setting("aspect_ratio")
 
 func get_current_aspect_ratio():
-    if interface.temp_settings.has("aspect_ratio"):
-        return interface.get_temp_setting("aspect_ratio")
+    if config.temp_settings.has("aspect_ratio"):
+        return config.get_temp_setting("aspect_ratio")
     else:
-        return interface.get_setting("aspect_ratio")
+        return config.get_setting("aspect_ratio")
     

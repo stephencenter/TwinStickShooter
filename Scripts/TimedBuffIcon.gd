@@ -3,7 +3,7 @@ extends Control
 var powerup_id : int = 2
 var player : Node2D
 onready var timer_bar : Control = $TimeRemaining
-onready var the_world = get_tree().get_root().get_node("World")
+onready var the_world = get_tree().get_root().get_node("Game")
 onready var list_of_icons = get_parent()
 onready var POWERUP_SPRITEMAP : Dictionary = {
     0: load("res://Sprites/powerup_surround_icon.png"),
@@ -32,7 +32,7 @@ func update_timer():
     var time_remaining = player.get_powerup_time_remaining(powerup_id)
     
     if time_remaining == 0:
-        self_destruct()
+        queue_free()
         return
 
     timer_bar.rect_scale.x = time_remaining/full_time
@@ -47,7 +47,3 @@ func update_icon_position():
     
     var height = $Template.rect_size.y*rect_scale.y
     rect_position.y = -index*(height + 10)
-    
-func self_destruct():
-    if is_inside_tree():
-        get_parent().remove_child(self)

@@ -1,20 +1,19 @@
 [gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://Sprites/target.png" type="Texture" id=1]
-[ext_resource path="res://Scripts/Enemy.gd" type="Script" id=2]
+[ext_resource path="res://Sprites/jelly_belly.png" type="Texture" id=1]
+[ext_resource path="res://Scenes/Enemies/JellyBelly.gd" type="Script" id=2]
 
 [sub_resource type="CapsuleShape2D" id=1]
 radius = 34.0
-height = 9.5
+height = 57.0
 
-[node name="Enemy" type="Node2D"]
+[node name="Jellybelly" type="Node2D"]
 script = ExtResource( 2 )
 __meta__ = {
 "_edit_group_": true
 }
 
 [node name="Sprite" type="Sprite" parent="."]
-position = Vector2( 2, 0 )
 scale = Vector2( 0.15, 0.15 )
 texture = ExtResource( 1 )
 

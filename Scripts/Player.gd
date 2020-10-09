@@ -19,7 +19,7 @@ onready var inv_timer : Timer = $InvincibilityTimer
 onready var flicker_timer : Timer = $SpriteFlickerTimer
 onready var collection_radius : Area2D = $CollectionRadius
 onready var joy_crosshair : Sprite = $Crosshair
-onready var interface : CanvasLayer = get_tree().get_root().get_node("World/Interface")
+onready var interface : CanvasLayer = get_tree().get_root().get_node("Game/Interface")
 onready var powerup_timers = {
     0: $PowerupTimers/SurroundTimer,
     1: $PowerupTimers/BarrierTimer,
@@ -34,10 +34,7 @@ var aim_vector : Vector2
 var aimed_mouse : bool = false
 var current_health : int = PLAYER_MAX_HEALTH
 
-# Updates
-func _ready():
-    pass
-    
+# Updates    
 func _process(delta):
     process_input(delta)
     process_movement(delta)
@@ -111,7 +108,7 @@ func attempt_collect_powerups():
             powerup_timers[powerup.powerup_type].start(POWERUP_DURATION)
             
         interface.create_buff_icon(powerup.powerup_type)
-        powerup.self_destruct()
+        powerup.queue_free()
         
 func cancel_powerup(powerup : int):
     powerup_timers[powerup].stop()
@@ -154,7 +151,7 @@ func invincibility_sprite_flicker():
     
 func check_for_death():
     if current_health <= 0:
-        self_destruct()
+        queue_free()
         
 # Helpers
 func get_movement_vector() -> Vector2:
@@ -211,7 +208,3 @@ func action_primary_fire():
     bullet_obj.set_bullet_velocity(current_aim)
     
     pf_timer.start(PRIMARY_FIRE_CD)
-
-func self_destruct():
-    if is_inside_tree():
-        get_parent().remove_child(self)

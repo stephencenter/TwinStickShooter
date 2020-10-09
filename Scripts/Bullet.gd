@@ -7,7 +7,7 @@ const BULLET_DAMAGE : int = 1
 onready var lifespan_timer : Timer = $LifespanTimer
 onready var hitbox : Area2D = $Hitbox
 onready var homing_radius : Area2D = $HomingRadius
-onready var the_world : Node2D = get_tree().get_root().get_node("World")
+onready var the_world : Node2D = get_tree().get_root().get_node("Game")
 onready var interface : CanvasLayer = the_world.get_node("Interface")
 
 var current_velocity : Vector2
@@ -15,16 +15,13 @@ var current_velocity : Vector2
 func _ready():
     lifespan_timer.start(BULLET_LIFESPAN)
 
-func _process(delta):
-    if !is_inside_tree():
-        return
-        
+func _process(delta):      
+    process_movement(delta)  
     keep_alive_if_inbounds()
-    process_movement(delta)
     attempt_damage_enemies()
     
     if lifespan_timer.time_left == 0:
-        self_destruct()
+        queue_free()
 
 func process_movement(delta):
     var player = the_world.get_player()
@@ -33,10 +30,7 @@ func process_movement(delta):
         var closest_enemy : Node2D
         var closest_distance : float = -1
         
-        for area in areas:
-            if !area.is_inside_tree():
-                continue
-                
+        for area in areas:                
             var distance = global_position.distance_to(area.global_position)
             if distance < closest_distance or closest_distance < 0:
                 closest_distance = distance
@@ -64,7 +58,7 @@ func attempt_damage_enemies():
     if !areas.empty():
         var enemy = areas[0].get_parent()
         enemy.take_damage_from_player(BULLET_DAMAGE)
-        self_destruct()
+        queue_free()
         
 func keep_alive_if_inbounds():
     var visible_pos =  interface.get_visible_world_position()
@@ -74,7 +68,3 @@ func keep_alive_if_inbounds():
     if global_position.x > top_left.x and global_position.x < bot_right.x:
         if global_position.y > top_left.y and global_position.y < bot_right.y:
             lifespan_timer.start(BULLET_LIFESPAN)
-        
-func self_destruct():
-    if is_inside_tree():
-        get_parent().remove_child(self)
