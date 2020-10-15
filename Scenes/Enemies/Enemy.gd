@@ -1,6 +1,6 @@
 extends Node2D
 
-const ENEMY_LIFESPAN : float = 10.0
+const ENEMY_LIFESPAN : float = 5.0
 var ENEMY_MAX_HEALTH : int
 var ENEMY_ATTACK_DAMAGE : int
 var ENEMY_POINT_REWARD : int 
@@ -18,24 +18,18 @@ func _ready():
 func _process(delta):
     process_movement(delta)
     attempt_damage_player()
-    keep_alive_if_inbounds()
-    
-    if lifespan_timer.time_left == 0:
-        queue_free()
+    manage_lifespan_timer()
 
 func process_movement(var _delta : float):
     pass
     
-func take_damage_from_player(damage_amount : int):
+func take_damage_from_player(damage_amount : int):        
     current_health -= damage_amount
     if current_health <= 0:
         the_world.reward_enemy_points(self)
         queue_free()
 
-func attempt_damage_player():
-    if !the_world.is_player_alive():
-        return
-        
+func attempt_damage_player():        
     for area in hitbox.get_overlapping_areas():
         var entity = area.get_parent()
         if entity == the_world.get_player():
@@ -44,11 +38,9 @@ func attempt_damage_player():
 func set_initial_position(initial_pos : Vector2):
     global_position = initial_pos
     
-func keep_alive_if_inbounds():
-    var visible_pos =  interface.get_visible_world_position()
-    var top_left = visible_pos[0]
-    var bot_right = visible_pos[1]
+func manage_lifespan_timer():
+    if interface.is_object_on_screen(self):
+        lifespan_timer.start(ENEMY_LIFESPAN)
     
-    if global_position.x > top_left.x and global_position.x < bot_right.x:
-        if global_position.y > top_left.y and global_position.y < bot_right.y:
-            lifespan_timer.start(ENEMY_LIFESPAN)
+    if lifespan_timer.time_left == 0:
+        queue_free()

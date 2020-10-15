@@ -1,19 +1,12 @@
 extends Control
 
-onready var player : Node2D
 onready var the_world = get_tree().get_root().get_node("Game")
 onready var remaining_bar : TextureRect = $CurrentHealth
 onready var hbar_size : Vector2 = $Border.rect_size
 onready var hp_label : Label = $HealthLabel
 
 func _process(_delta):
-    if !the_world.is_player_alive():
-        player = null
-        return
-    
-    if player == null:
-        player = the_world.get_player()
-        return
+    var player = the_world.get_player()
     
     if player.PLAYER_MAX_HEALTH == 1:
         visible = false

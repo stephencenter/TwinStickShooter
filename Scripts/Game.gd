@@ -28,7 +28,7 @@ func _ready():
     start_new_game()
 
 func _process(_delta):
-    if is_player_alive():            
+    if get_player().is_alive():            
         if powerup_spawn_timer.time_left == 0:
             spawn_powerup()
             powerup_spawn_timer.start(TIME_BETWEEN_POWERUPS)
@@ -39,18 +39,14 @@ func _process(_delta):
         if Input.is_action_just_pressed("new_game"):
             start_new_game()
 
-func is_player_alive():
-    return object_container.has_node("Player")
-
 func get_player():
-    if is_player_alive():
-        return object_container.get_node("Player")
-    return null
+    return object_container.get_node("Player")
 
+func get_player_position():        
+    return get_player().global_position
+    
 func get_player_screen_position():
-    if is_player_alive():
-        return get_player().get_global_transform_with_canvas().origin
-    return Vector2.ZERO
+    return get_player().get_global_transform_with_canvas().origin
 
 func add_new_object(var the_object):
     object_container.add_child(the_object)

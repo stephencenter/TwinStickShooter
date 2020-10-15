@@ -17,7 +17,7 @@ func _ready():
     current_health = ENEMY_MAX_HEALTH
 
 func _process(_delta):
-    if !the_world.is_player_alive():
+    if !the_world.get_player().is_alive():
         return
         
     if long_timer.time_left == 0:

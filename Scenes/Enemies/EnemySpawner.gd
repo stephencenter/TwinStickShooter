@@ -1,7 +1,7 @@
 extends Node
 
-const BASE_TIME_BETWEEN_ENEMIES : float = 0.40
-const MIN_TIME_BETWEEN_ENEMIES : float = 0.125
+const BASE_TIME_BETWEEN_ENEMIES : float = 1.0
+const MIN_TIME_BETWEEN_ENEMIES : float = 0.30
 const TIME_FOR_MAX_DIFFICULTY : float = 120.0
 const TIME_BETWEEN_DIFFICULTY_TICKS : float = 0.02
 
@@ -14,29 +14,41 @@ onready var difficulty_timer : Timer = $DifficultyTimer
 
 onready var jellybelly_timer : Timer = $JellybellySpawnTimer
 onready var jellybelly_scene = load("res://Scenes/Enemies/Jellybelly.tscn")
-const JELLYBELLY_TIME_MULTIPLIER : float = 1.5
+const JELLYBELLY_INITIAL_SPAWN_TIME : float = 0.0
+const JELLYBELLY_TIME_MULTIPLIER : float = 0.5
 
-onready var snakeray_scene = load("res://Scenes/Enemies/Snakeray.tscn")
-onready var snakeray_timer : Timer = $SnakeraySpawnTimer
-const SNAKERAY_TIME_MULTIPLIER : float = 20.0
+onready var raysnake_scene = load("res://Scenes/Enemies/Raysnake.tscn")
+onready var raysnake_timer : Timer = $RaysnakeSpawnTimer
+const RAYSNAKE_INITIAL_SPAWN_TIME : float = 30.0
+const RAYSNAKE_TIME_MULTIPLIER : float = 20.0
 
 onready var tribot_scene = load("res://Scenes/Enemies/Tribot.tscn")
 onready var tribot_timer : Timer = $TribotSpawnTimer
-const TRIBOT_TIME_MULTIPLIER : float = 50.0
+const TRIBOT_INITIAL_SPAWN_TIME : float = 60.0
+const TRIBOT_TIME_MULTIPLIER : float = 40.0
 
-func _process(_delta):        
-    if the_game.is_player_alive():
+onready var mirrorgirl_scene = load("res://Scenes/Enemies/Mirrorgirl.tscn")
+onready var mirrorgirl_timer : Timer = $MirrorgirlSpawnTimer
+const MiRRORGiRL_INITIAL_SPAWN_TIME : float = 120.0
+const MiRRORGiRL_TIME_MULTIPLIER : float = 80.0
+
+func _process(_delta):
+    if the_game.get_player().is_alive():
         if jellybelly_timer.time_left == 0:
             spawn_jellybelly()
             jellybelly_timer.start(time_between_enemies*JELLYBELLY_TIME_MULTIPLIER)
         
-        if snakeray_timer.time_left == 0:
-            spawn_snakeray()
-            snakeray_timer.start(time_between_enemies*SNAKERAY_TIME_MULTIPLIER)
+        if raysnake_timer.time_left == 0:
+            spawn_raysnake()
+            raysnake_timer.start(time_between_enemies*RAYSNAKE_TIME_MULTIPLIER)
             
         if tribot_timer.time_left == 0:
             spawn_tribot()
             tribot_timer.start(time_between_enemies*TRIBOT_TIME_MULTIPLIER)
+        
+        if mirrorgirl_timer.time_left == 0:
+            spawn_mirrorgirl()
+            mirrorgirl_timer.start(time_between_enemies*MiRRORGiRL_TIME_MULTIPLIER)
             
         if difficulty_timer.time_left == 0:
             increase_difficulty()
@@ -45,9 +57,10 @@ func _process(_delta):
 func start_spawner():
     difficulty_ticks = 0
     time_between_enemies = BASE_TIME_BETWEEN_ENEMIES
-    jellybelly_timer.start(time_between_enemies*JELLYBELLY_TIME_MULTIPLIER)
-    snakeray_timer.start(time_between_enemies*SNAKERAY_TIME_MULTIPLIER)
-    tribot_timer.start(time_between_enemies*TRIBOT_TIME_MULTIPLIER)
+    jellybelly_timer.start(time_between_enemies*JELLYBELLY_INITIAL_SPAWN_TIME)
+    raysnake_timer.start(time_between_enemies*RAYSNAKE_INITIAL_SPAWN_TIME)
+    tribot_timer.start(time_between_enemies*TRIBOT_INITIAL_SPAWN_TIME)
+    mirrorgirl_timer.start(time_between_enemies*MiRRORGiRL_INITIAL_SPAWN_TIME)
     difficulty_timer.start(TIME_BETWEEN_DIFFICULTY_TICKS)
     
 func increase_difficulty():
@@ -125,7 +138,7 @@ func spawn_jellybelly():
     the_game.add_new_object(new_enemy)
     
 # Enemy spawner
-func get_snakeray_spawnpoint() -> Vector2:
+func get_raysnake_spawnpoint() -> Vector2:
     var visible_pos = interface.get_visible_world_position()
     var midpoint_x = (visible_pos[0].x + visible_pos[1].x)/2
     var midpoint_y = (visible_pos[0].y + visible_pos[1].y)/2
@@ -172,15 +185,15 @@ func get_snakeray_spawnpoint() -> Vector2:
         
     return spawnpoint
 
-func get_snakeray_spawnangle(var spawnpoint : Vector2) -> Vector2:
+func get_raysnake_spawnangle(var spawnpoint : Vector2) -> Vector2:
     var player_pos = the_game.get_player().global_position
     return player_pos - spawnpoint
 
-func spawn_snakeray():
-    var spawn_point = get_snakeray_spawnpoint()
-    var spawn_angle = get_snakeray_spawnangle(spawn_point)
+func spawn_raysnake():
+    var spawn_point = get_raysnake_spawnpoint()
+    var spawn_angle = get_raysnake_spawnangle(spawn_point)
     
-    var new_enemy = snakeray_scene.instance()
+    var new_enemy = raysnake_scene.instance()
     new_enemy.set_initial_position(spawn_point)
     new_enemy.set_snake_velocity(spawn_angle)
     the_game.add_new_object(new_enemy)
@@ -252,7 +265,6 @@ func get_tribot_spawnangle(var direction) -> Vector2:
         return Vector2(-1, 0)
         
     return Vector2(1, 0)
-        
     
 func spawn_tribot():
     var spawn_side = get_tribot_spawnside()
@@ -262,4 +274,13 @@ func spawn_tribot():
     var new_enemy = tribot_scene.instance()
     new_enemy.set_initial_position(spawn_point)
     new_enemy.set_tribot_velocity(spawn_angle)
+    the_game.add_new_object(new_enemy)
+
+
+func spawn_mirrorgirl():
+    var sides : Array = ["up", "down", "left", "right"]
+    var chosen_side = sides[randi() % sides.size()]
+    var spawn_point = get_jellybelly_spawnpoint(chosen_side)
+    var new_enemy = mirrorgirl_scene.instance()
+    new_enemy.set_initial_position(spawn_point)
     the_game.add_new_object(new_enemy)

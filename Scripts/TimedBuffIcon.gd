@@ -17,7 +17,7 @@ func _process(_delta):
     update_icon_position()
 
 func update_timer():
-    if !the_world.is_player_alive():
+    if !the_world.get_player().is_alive():
         player = null
         return
     

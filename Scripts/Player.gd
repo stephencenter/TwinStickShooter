@@ -36,6 +36,10 @@ var current_health : int = PLAYER_MAX_HEALTH
 
 # Updates    
 func _process(delta):
+    if !is_alive():
+        visible = false
+        return
+        
     process_input(delta)
     process_movement(delta)
     process_rotation(delta)
@@ -43,7 +47,6 @@ func _process(delta):
     attempt_collect_powerups()
     update_barrier_sprite()
     invincibility_sprite_flicker()
-    check_for_death()
 
 func _input(event):
     if event is InputEventMouseMotion:
@@ -95,9 +98,9 @@ func process_rotation(delta):
         global_rotation += PLAYER_TURN_SPEED*delta
 
 func clamp_position():
-    var visual_size = get_viewport().get_visible_rect().size
-    global_position.x = clamp(global_position.x, 0, visual_size.x)
-    global_position.y = clamp(global_position.y, 0, visual_size.y)    
+    var screen_rect = interface.get_visible_world_position()
+    global_position.x = clamp(global_position.x, screen_rect[0].x, screen_rect[1].x)
+    global_position.y = clamp(global_position.y, screen_rect[0].y, screen_rect[1].y)    
     
 func attempt_collect_powerups():
     var areas = collection_radius.get_overlapping_areas()
@@ -125,7 +128,7 @@ func update_crosshair_position():
     joy_crosshair.global_rotation = 0
 
 func take_damage_from_enemy(damage_amount : int):
-    if inv_timer.time_left > 0:
+    if inv_timer.time_left > 0 or damage_amount == 0:
         return
         
     if has_powerup(1):
@@ -148,11 +151,9 @@ func invincibility_sprite_flicker():
     else:
         $PlayerSprite.visible = true
         
+func is_alive():
+    return current_health > 0
     
-func check_for_death():
-    if current_health <= 0:
-        queue_free()
-        
 # Helpers
 func get_movement_vector() -> Vector2:
     var move_vec : Vector2 = Vector2()

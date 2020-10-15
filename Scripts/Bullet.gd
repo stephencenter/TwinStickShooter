@@ -1,7 +1,7 @@
 extends Node2D
 
 const BULLET_TRAVEL_SPEED : float = 800.0
-const BULLET_LIFESPAN : float = 5.0
+const BULLET_LIFESPAN : float = 0.5
 const BULLET_DAMAGE : int = 1
 
 onready var lifespan_timer : Timer = $LifespanTimer
@@ -16,12 +16,9 @@ func _ready():
     lifespan_timer.start(BULLET_LIFESPAN)
 
 func _process(delta):      
-    process_movement(delta)  
-    keep_alive_if_inbounds()
+    process_movement(delta)
     attempt_damage_enemies()
-    
-    if lifespan_timer.time_left == 0:
-        queue_free()
+    manage_lifespan_timer()
 
 func process_movement(delta):
     var player = the_world.get_player()
@@ -60,11 +57,9 @@ func attempt_damage_enemies():
         enemy.take_damage_from_player(BULLET_DAMAGE)
         queue_free()
         
-func keep_alive_if_inbounds():
-    var visible_pos =  interface.get_visible_world_position()
-    var top_left = visible_pos[0]
-    var bot_right = visible_pos[1]
+func manage_lifespan_timer():
+    if interface.is_object_on_screen(self):
+        lifespan_timer.start(BULLET_LIFESPAN)
     
-    if global_position.x > top_left.x and global_position.x < bot_right.x:
-        if global_position.y > top_left.y and global_position.y < bot_right.y:
-            lifespan_timer.start(BULLET_LIFESPAN)
+    if lifespan_timer.time_left == 0:
+        queue_free()
