@@ -1,6 +1,6 @@
 extends "res://Scenes/Enemies/Enemy.gd"
 
-const SNAKE_MOVE_SPEED : float = 400.0
+const SNAKE_MOVE_SPEED : float = 500.0
 
 func _ready():
     ENEMY_MAX_HEALTH = 10

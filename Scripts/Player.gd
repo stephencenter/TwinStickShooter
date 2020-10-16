@@ -100,61 +100,8 @@ func process_rotation(delta):
 func clamp_position():
     var screen_rect = interface.get_visible_world_position()
     global_position.x = clamp(global_position.x, screen_rect[0].x, screen_rect[1].x)
-    global_position.y = clamp(global_position.y, screen_rect[0].y, screen_rect[1].y)    
+    global_position.y = clamp(global_position.y, screen_rect[0].y, screen_rect[1].y)
     
-func attempt_collect_powerups():
-    var areas = collection_radius.get_overlapping_areas()
-    if !areas.empty():
-        var powerup = areas[0].get_parent()
-        
-        if powerup.get_parent() != null:
-            powerup_timers[powerup.powerup_type].start(POWERUP_DURATION)
-            
-        interface.create_buff_icon(powerup.powerup_type)
-        powerup.queue_free()
-        
-func cancel_powerup(powerup : int):
-    powerup_timers[powerup].stop()
-    
-func has_powerup(powerup : int) -> bool:
-    return powerup_timers[powerup].time_left > 0
-
-func get_powerup_time_remaining(powerup : int) -> float:
-    return powerup_timers[powerup].time_left
-     
-func update_crosshair_position():
-    var angle_vec = Vector2(cos(global_rotation), sin(global_rotation))
-    joy_crosshair.global_position = global_position + angle_vec*JOY_CROSSHAIR_DISTANCE
-    joy_crosshair.global_rotation = 0
-
-func take_damage_from_enemy(damage_amount : int):
-    if inv_timer.time_left > 0 or damage_amount == 0:
-        return
-        
-    if has_powerup(1):
-        cancel_powerup(1)
-        
-    else:
-        current_health -= damage_amount
-        
-    current_health = int(max(0, current_health))
-        
-    inv_timer.start(PLAYER_INVINCE_TIME)
-    flicker_timer.start(PLAYER_FLICKER_TIME)
-
-func invincibility_sprite_flicker():
-    if inv_timer.time_left > 0:
-        if flicker_timer.time_left == 0:
-            $PlayerSprite.visible = !$PlayerSprite.visible
-            flicker_timer.start(PLAYER_FLICKER_TIME)
-        
-    else:
-        $PlayerSprite.visible = true
-        
-func is_alive():
-    return current_health > 0
-    
-# Helpers
 func get_movement_vector() -> Vector2:
     var move_vec : Vector2 = Vector2()
     
@@ -193,10 +140,63 @@ func get_aim_joystick() -> Vector2:
         
     interface.enable_joystick_cursor()
     return aim_vec.normalized()
-    
+ 
+func invincibility_sprite_flicker():
+    if inv_timer.time_left > 0:
+        if flicker_timer.time_left == 0:
+            $PlayerSprite.visible = !$PlayerSprite.visible
+            flicker_timer.start(PLAYER_FLICKER_TIME)
+        
+    else:
+        $PlayerSprite.visible = true
+      
+func update_crosshair_position():
+    var angle_vec = Vector2(cos(global_rotation), sin(global_rotation))
+    joy_crosshair.global_position = global_position + angle_vec*JOY_CROSSHAIR_DISTANCE
+    joy_crosshair.global_rotation = 0
+
 func update_barrier_sprite():
     $BarrierSprite.visible = powerup_timers[1].time_left > 0
 
+# Helpers   
+func attempt_collect_powerups():
+    var areas = collection_radius.get_overlapping_areas()
+    if !areas.empty():
+        var powerup = areas[0].get_parent()
+        
+        if powerup.get_parent() != null:
+            powerup_timers[powerup.powerup_type].start(POWERUP_DURATION)
+            
+        interface.create_buff_icon(powerup.powerup_type)
+        powerup.queue_free()
+        
+func cancel_powerup(powerup : int):
+    powerup_timers[powerup].stop()
+    
+func has_powerup(powerup : int) -> bool:
+    return powerup_timers[powerup].time_left > 0
+
+func get_powerup_time_remaining(powerup : int) -> float:
+    return powerup_timers[powerup].time_left
+
+func take_damage_from_enemy(damage_amount : int):
+    if inv_timer.time_left > 0 or damage_amount == 0:
+        return
+        
+    if has_powerup(1):
+        cancel_powerup(1)
+        
+    else:
+        current_health -= damage_amount
+        
+    current_health = int(max(0, current_health))
+        
+    inv_timer.start(PLAYER_INVINCE_TIME)
+    flicker_timer.start(PLAYER_FLICKER_TIME)
+       
+func is_alive() -> bool:
+    return current_health > 0
+    
 # Actions
 func action_primary_fire():
     if current_aim.length() == 0:

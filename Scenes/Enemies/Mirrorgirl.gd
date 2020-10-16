@@ -4,11 +4,13 @@ const MIRROR_MOVE_SPEED : float = 300.0
 const MIRROR_ORBIT_DISTANCE : float = 200.0
 const MIRROR_ORBIT_DEADZONE : float = 2.0
 const MIRROR_ORBIT_DURATION : float = 12.0
+const MIRROR_REFLECTION_CD : float = 1.5
 var attached = false
 
 onready var bullet_scene = load("res://Scenes/Enemies/MirrorBullet.tscn")
 onready var reflector = $Reflector
 onready var orbit_timer = $OrbitTimer
+onready var reflect_timer = $ReflectTimer
     
 func _process(_delta):
     reflect_bullets()
@@ -46,6 +48,9 @@ func get_current_angle() -> Vector2:
     return (global_position - the_player.global_position).normalized()
 
 func reflect_bullets():
+    if reflect_timer.time_left > 0:
+        return
+        
     var areas = reflector.get_overlapping_areas()
     if areas.empty():
         return
@@ -53,7 +58,8 @@ func reflect_bullets():
     areas[0].get_parent().queue_free()
     var bullet_obj = bullet_scene.instance()
     get_parent().add_child(bullet_obj)
-    bullet_obj.global_position = global_position    
+    bullet_obj.global_position = global_position
+    reflect_timer.start(MIRROR_REFLECTION_CD)
 
 func get_closest_corner() -> Vector2:
     var screen_size = get_viewport().get_visible_rect().size

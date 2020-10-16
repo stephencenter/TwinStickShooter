@@ -57,10 +57,10 @@ func _process(_delta):
 func start_spawner():
     difficulty_ticks = 0
     time_between_enemies = BASE_TIME_BETWEEN_ENEMIES
-    jellybelly_timer.start(time_between_enemies*JELLYBELLY_INITIAL_SPAWN_TIME)
-    raysnake_timer.start(time_between_enemies*RAYSNAKE_INITIAL_SPAWN_TIME)
-    tribot_timer.start(time_between_enemies*TRIBOT_INITIAL_SPAWN_TIME)
-    mirrorgirl_timer.start(time_between_enemies*MiRRORGiRL_INITIAL_SPAWN_TIME)
+    jellybelly_timer.start(JELLYBELLY_INITIAL_SPAWN_TIME)
+    raysnake_timer.start(RAYSNAKE_INITIAL_SPAWN_TIME)
+    tribot_timer.start(TRIBOT_INITIAL_SPAWN_TIME)
+    mirrorgirl_timer.start(MiRRORGiRL_INITIAL_SPAWN_TIME)
     difficulty_timer.start(TIME_BETWEEN_DIFFICULTY_TICKS)
     
 func increase_difficulty():
