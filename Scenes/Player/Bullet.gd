@@ -7,8 +7,8 @@ const BULLET_DAMAGE : int = 1
 onready var lifespan_timer : Timer = $LifespanTimer
 onready var hitbox : Area2D = $Hitbox
 onready var homing_radius : Area2D = $HomingRadius
-onready var the_world : Node2D = get_tree().get_root().get_node("Game")
-onready var interface : CanvasLayer = the_world.get_node("Interface")
+onready var the_game : Node2D = get_tree().get_root().get_node("Game")
+onready var interface : CanvasLayer = get_tree().get_root().get_node("Game/Interface")
 
 var current_velocity : Vector2
 
@@ -21,7 +21,7 @@ func _process(delta):
     manage_lifespan_timer()
 
 func process_movement(delta):
-    var player = the_world.get_player()
+    var player = the_game.get_player()
     if player != null and player.has_powerup(3):
         var areas = homing_radius.get_overlapping_areas()
         var closest_enemy : Node2D
@@ -58,7 +58,7 @@ func attempt_damage_enemies():
         queue_free()
         
 func manage_lifespan_timer():
-    if interface.is_object_on_screen(self):
+    if the_game.is_object_on_screen(self):
         lifespan_timer.start(BULLET_LIFESPAN)
     
     if lifespan_timer.time_left == 0:

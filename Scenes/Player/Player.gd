@@ -13,12 +13,13 @@ const JOY_CROSSHAIR_DISTANCE : float = 120.0
 const PLAYER_INVINCE_TIME : float = 1.5
 const PLAYER_FLICKER_TIME : float = 0.1
 
-onready var bullet_scene = load("res://Scenes/Bullet.tscn")
+onready var bullet_scene = load("res://Scenes/Player/Bullet.tscn")
 onready var pf_timer : Timer = $PrimaryFireTimer
 onready var inv_timer : Timer = $InvincibilityTimer
 onready var flicker_timer : Timer = $SpriteFlickerTimer
 onready var collection_radius : Area2D = $CollectionRadius
 onready var joy_crosshair : Sprite = $Crosshair
+onready var the_game = get_tree().get_root().get_node("Game")
 onready var interface : CanvasLayer = get_tree().get_root().get_node("Game/Interface")
 onready var powerup_timers = {
     0: $PowerupTimers/SurroundTimer,
@@ -48,6 +49,9 @@ func _process(delta):
     update_barrier_sprite()
     invincibility_sprite_flicker()
 
+    if pf_timer.time_left == 0:
+        action_primary_fire()
+
 func _input(event):
     if event is InputEventMouseMotion:
         if Input.get_mouse_mode() == Input.MOUSE_MODE_HIDDEN:
@@ -62,9 +66,6 @@ func process_input(_delta):
     
     if Input.get_mouse_mode() == Input.MOUSE_MODE_VISIBLE:
         aim_vector = get_global_mouse_position() - global_position
-
-    if pf_timer.time_left == 0:
-        action_primary_fire()
     
 func process_movement(delta):
     movement_vector = movement_vector*PLAYER_MAX_SPEED
@@ -98,7 +99,7 @@ func process_rotation(delta):
         global_rotation += PLAYER_TURN_SPEED*delta
 
 func clamp_position():
-    var screen_rect = interface.get_visible_world_position()
+    var screen_rect = the_game.get_visible_world_rect()
     global_position.x = clamp(global_position.x, screen_rect[0].x, screen_rect[1].x)
     global_position.y = clamp(global_position.y, screen_rect[0].y, screen_rect[1].y)
     
@@ -155,6 +156,9 @@ func update_crosshair_position():
     joy_crosshair.global_position = global_position + angle_vec*JOY_CROSSHAIR_DISTANCE
     joy_crosshair.global_rotation = 0
 
+func get_crosshair_position():
+    return joy_crosshair.global_position
+    
 func update_barrier_sprite():
     $BarrierSprite.visible = powerup_timers[1].time_left > 0
 

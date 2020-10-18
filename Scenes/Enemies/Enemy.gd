@@ -9,8 +9,8 @@ var current_velocity : Vector2
 
 onready var hitbox : Area2D = $Hitbox
 onready var lifespan_timer : Timer = $LifespanTimer
-onready var the_world : Node2D = get_tree().get_root().get_node("Game")
-onready var interface : CanvasLayer = the_world.get_node("Interface")
+onready var the_game : Node2D = get_tree().get_root().get_node("Game")
+onready var score_manager : Node = get_tree().get_root().get_node("Game/ScoreManager")
 
 func _ready():
     lifespan_timer.start(ENEMY_LIFESPAN)
@@ -26,20 +26,20 @@ func process_movement(var _delta : float):
 func take_damage_from_player(damage_amount : int):        
     current_health -= damage_amount
     if current_health <= 0:
-        the_world.reward_enemy_points(self)
+        score_manager.reward_enemy_points(self)
         queue_free()
 
 func attempt_damage_player():        
     for area in hitbox.get_overlapping_areas():
         var entity = area.get_parent()
-        if entity == the_world.get_player():
+        if entity == the_game.get_player():
             entity.take_damage_from_enemy(ENEMY_ATTACK_DAMAGE)
     
 func set_initial_position(initial_pos : Vector2):
     global_position = initial_pos
     
 func manage_lifespan_timer():
-    if interface.is_object_on_screen(self):
+    if the_game.is_object_on_screen(self):
         lifespan_timer.start(ENEMY_LIFESPAN)
     
     if lifespan_timer.time_left == 0:

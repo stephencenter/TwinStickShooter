@@ -13,24 +13,24 @@ onready var interface : CanvasLayer = the_game.get_node("Interface")
 onready var difficulty_timer : Timer = $DifficultyTimer
 
 onready var jellybelly_timer : Timer = $JellybellySpawnTimer
-onready var jellybelly_scene = load("res://Scenes/Enemies/Jellybelly.tscn")
+onready var jellybelly_scene = load("res://Scenes/Enemies/Jellybelly/Jellybelly.tscn")
 const JELLYBELLY_INITIAL_SPAWN_TIME : float = 0.0
 const JELLYBELLY_TIME_MULTIPLIER : float = 0.5
 
-onready var raysnake_scene = load("res://Scenes/Enemies/Raysnake.tscn")
+onready var raysnake_scene = load("res://Scenes/Enemies/Raysnake/Raysnake.tscn")
 onready var raysnake_timer : Timer = $RaysnakeSpawnTimer
 const RAYSNAKE_INITIAL_SPAWN_TIME : float = 30.0
 const RAYSNAKE_TIME_MULTIPLIER : float = 20.0
 
-onready var tribot_scene = load("res://Scenes/Enemies/Tribot.tscn")
+onready var tribot_scene = load("res://Scenes/Enemies/Tribot/Tribot.tscn")
 onready var tribot_timer : Timer = $TribotSpawnTimer
 const TRIBOT_INITIAL_SPAWN_TIME : float = 60.0
 const TRIBOT_TIME_MULTIPLIER : float = 40.0
 
-onready var mirrorgirl_scene = load("res://Scenes/Enemies/Mirrorgirl.tscn")
+onready var mirrorgirl_scene = load("res://Scenes/Enemies/Mirrorgirl/Mirrorgirl.tscn")
 onready var mirrorgirl_timer : Timer = $MirrorgirlSpawnTimer
 const MiRRORGiRL_INITIAL_SPAWN_TIME : float = 120.0
-const MiRRORGiRL_TIME_MULTIPLIER : float = 80.0
+const MiRRORGiRL_TIME_MULTIPLIER : float = 120.0
 
 func _process(_delta):
     if the_game.get_player().is_alive():
@@ -81,12 +81,12 @@ func get_jellybelly_spawnpoint(chosen_side : String) -> Vector2:
     # This is used to determine where to spawn enemies
     # Margin ensures that enemies won't spawn in the corners
     var deadzone = 0.1
-    var visible_pos = interface.get_visible_world_position()
-    var world_size = get_viewport().get_visible_rect().size
-    var min_x = visible_pos[0].x
-    var min_y = visible_pos[0].y
-    var max_x = visible_pos[1].x
-    var max_y = visible_pos[1].y
+    var world_rect = the_game.get_visible_world_rect()
+    var screen_size = get_viewport().get_visible_rect().size
+    var min_x = world_rect[0].x
+    var min_y = world_rect[0].y
+    var max_x = world_rect[1].x
+    var max_y = world_rect[1].y
     
     var chosen_x = rand_range(min_x + max_x*deadzone, max_x*(1 - deadzone))
     var chosen_y = rand_range(min_y + max_y*deadzone, max_y*(1 - deadzone))
@@ -94,13 +94,13 @@ func get_jellybelly_spawnpoint(chosen_side : String) -> Vector2:
     var buffer = 0.1
     var spawn_point : Vector2
     if chosen_side == "up":
-        spawn_point = Vector2(chosen_x, min_y - world_size.y*buffer)  
+        spawn_point = Vector2(chosen_x, min_y - screen_size.y*buffer)  
     elif chosen_side == "down":
-        spawn_point = Vector2(chosen_x, min_y + world_size.y*(1 + buffer))
+        spawn_point = Vector2(chosen_x, min_y + screen_size.y*(1 + buffer))
     elif chosen_side == "left":
-        spawn_point = Vector2(min_x - world_size.x*buffer, chosen_y)
+        spawn_point = Vector2(min_x - screen_size.x*buffer, chosen_y)
     else:
-        spawn_point = Vector2(min_x + world_size.x*(1 + buffer), chosen_y)
+        spawn_point = Vector2(min_x + screen_size.x*(1 + buffer), chosen_y)
         
     return spawn_point
 
@@ -139,10 +139,10 @@ func spawn_jellybelly():
     
 # Enemy spawner
 func get_raysnake_spawnpoint() -> Vector2:
-    var visible_pos = interface.get_visible_world_position()
-    var midpoint_x = (visible_pos[0].x + visible_pos[1].x)/2
-    var midpoint_y = (visible_pos[0].y + visible_pos[1].y)/2
-    var player_pos = the_game.get_player().global_position
+    var player_pos = the_game.get_player_global_position()
+    var world_rect = the_game.get_visible_world_rect()
+    var midpoint_x = (world_rect[0].x + world_rect[1].x)/2
+    var midpoint_y = (world_rect[0].y + world_rect[1].y)/2
     
     var chosen_side : bool = randi() % 2
     
@@ -150,43 +150,43 @@ func get_raysnake_spawnpoint() -> Vector2:
     # Player is in top-left, enemy spawns along bot-right
     if player_pos.x < midpoint_x and player_pos.y < midpoint_y:
         if chosen_side:
-            spawnpoint.x = rand_range(midpoint_x, visible_pos[1].x)
-            spawnpoint.y = visible_pos[1].y
+            spawnpoint.x = rand_range(midpoint_x, world_rect[1].x)
+            spawnpoint.y = world_rect[1].y
         else:
-            spawnpoint.x = visible_pos[1].x
-            spawnpoint.y = rand_range(midpoint_y, visible_pos[1].y)
+            spawnpoint.x = world_rect[1].x
+            spawnpoint.y = rand_range(midpoint_y, world_rect[1].y)
         
     # Player is in bot-left, enemy spawns along top-right
     elif player_pos.x < midpoint_x and player_pos.y >= midpoint_y:
         if chosen_side:
-            spawnpoint.x = rand_range(midpoint_x, visible_pos[1].x)
-            spawnpoint.y = visible_pos[0].y
+            spawnpoint.x = rand_range(midpoint_x, world_rect[1].x)
+            spawnpoint.y = world_rect[0].y
         else:
-            spawnpoint.x = visible_pos[1].x
-            spawnpoint.y = rand_range(visible_pos[0].y, midpoint_y)
+            spawnpoint.x = world_rect[1].x
+            spawnpoint.y = rand_range(world_rect[0].y, midpoint_y)
     
     # Player is in top-right, enemy spawns along bot-right
     elif player_pos.x >= midpoint_x and player_pos.y < midpoint_y:
         if chosen_side:
-            spawnpoint.x = rand_range(visible_pos[0].x, midpoint_x)
-            spawnpoint.y = visible_pos[1].y
+            spawnpoint.x = rand_range(world_rect[0].x, midpoint_x)
+            spawnpoint.y = world_rect[1].y
         else:
-            spawnpoint.x = visible_pos[0].x
-            spawnpoint.y = rand_range(midpoint_y, visible_pos[1].y)
+            spawnpoint.x = world_rect[0].x
+            spawnpoint.y = rand_range(midpoint_y, world_rect[1].y)
     
     # Player is in bot-right, enemy spawns along top-left
     else:
         if chosen_side:
-            spawnpoint.x = rand_range(visible_pos[0].x, midpoint_x)
-            spawnpoint.y = visible_pos[0].y
+            spawnpoint.x = rand_range(world_rect[0].x, midpoint_x)
+            spawnpoint.y = world_rect[0].y
         else:
-            spawnpoint.x = visible_pos[0].x
-            spawnpoint.y = rand_range(visible_pos[0].y, midpoint_y)
+            spawnpoint.x = world_rect[0].x
+            spawnpoint.y = rand_range(world_rect[0].y, midpoint_y)
         
     return spawnpoint
 
 func get_raysnake_spawnangle(var spawnpoint : Vector2) -> Vector2:
-    var player_pos = the_game.get_player().global_position
+    var player_pos = the_game.get_player_global_position()
     return player_pos - spawnpoint
 
 func spawn_raysnake():

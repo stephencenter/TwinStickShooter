@@ -7,6 +7,7 @@ onready var fullscreen_node : Control = $DisplayMode/Fullscreen
 onready var borderless_node : Control = $DisplayMode/Borderless
 onready var apply_node : Control = $Apply
 onready var resume_node : Control = $Resume
+onready var nothing_node : Control = $Nothing
 
 # These arrays specify which node you go to when you press each direction
 # First element is Up, second is Down, then Left, the Right
@@ -17,19 +18,16 @@ onready var navigation_map : Dictionary = {
     fullscreen_node: [resolution_node, apply_node, windowed_node, borderless_node],
     borderless_node: [resolution_node, apply_node, fullscreen_node, null],
     resume_node: [windowed_node, null, null, apply_node],
-    apply_node: [windowed_node, null, resume_node, null]
+    apply_node: [windowed_node, null, resume_node, null],
+    nothing_node: [aspect_node, aspect_node, aspect_node, aspect_node]
 }
 
-onready var current_node : Control = aspect_node
+onready var current_node : Control = nothing_node
 var using_option_button : bool = false
 var original_ob_selection : int
 
 func _process(_delta):
     if !get_tree().paused:
-        if using_option_button:
-            set_option_mode(false)
-        if visible:
-            visible = false
         return
         
     if using_option_button:
@@ -118,14 +116,12 @@ func press_current_node_button():
         button._pressed()
 
 func set_option_mode(value : bool):
-    var arrow_left = current_node.get_node("ArrowLeft")
-    var arrow_right = current_node.get_node("ArrowRight")
-    using_option_button = value
-    
-    if !using_option_button:
+    if using_option_button and !value:
         Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
-        arrow_left.visible = false
-        arrow_right.visible = false
+        current_node.get_node("ArrowLeft").visible = false
+        current_node.get_node("ArrowRight").visible = false
         
     else:
         Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
+
+    using_option_button = value

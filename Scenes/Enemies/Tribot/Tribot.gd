@@ -4,7 +4,7 @@ const TRIBOT_MAX_SPEED : float = 80.0
 const LASER_COOLDOWN_LONG : float = 3.0
 const LASER_COOLDOWN_SHORT : float = 0.35
 const NUM_LASERS : int = 3
-onready var laser_scene = load("res://Scenes/Enemies/TribotLaser.tscn")
+onready var laser_scene = load("res://Scenes/Enemies/Tribot/TribotLaser.tscn")
 onready var long_timer = $LaserTimerLong
 onready var short_timer = $LaserTimerShort
 
@@ -17,7 +17,7 @@ func _ready():
     current_health = ENEMY_MAX_HEALTH
 
 func _process(_delta):
-    if !the_world.get_player().is_alive():
+    if !the_game.get_player().is_alive():
         return
         
     if long_timer.time_left == 0:
@@ -36,7 +36,7 @@ func fire_laser():
     var laser_obj = laser_scene.instance()
     get_parent().add_child(laser_obj)
     
-    var aim_direction = the_world.get_player().global_position - global_position
+    var aim_direction = the_game.get_player_global_position() - global_position
     laser_obj.set_initial_position(global_position)
     laser_obj.set_laser_velocity(aim_direction)
 

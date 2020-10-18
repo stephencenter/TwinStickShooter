@@ -1,12 +1,12 @@
 extends Control
 
-onready var the_world = get_tree().get_root().get_node("Game")
+onready var the_game = get_tree().get_root().get_node("Game")
 onready var remaining_bar : TextureRect = $CurrentHealth
 onready var hbar_size : Vector2 = $Border.rect_size
 onready var hp_label : Label = $HealthLabel
 
 func _process(_delta):
-    var player = the_world.get_player()
+    var player = the_game.get_player()
     
     if player.PLAYER_MAX_HEALTH == 1:
         visible = false

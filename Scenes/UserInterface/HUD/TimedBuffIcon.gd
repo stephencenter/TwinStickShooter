@@ -1,10 +1,8 @@
 extends Control
 
-var powerup_id : int = 2
-var player : Node2D
 onready var timer_bar : Control = $TimeRemaining
-onready var the_world = get_tree().get_root().get_node("Game")
-onready var list_of_icons = get_parent()
+onready var the_game = get_tree().get_root().get_node("Game")
+onready var icon_container = get_parent()
 onready var POWERUP_SPRITEMAP : Dictionary = {
     0: load("res://Sprites/powerup_surround_icon.png"),
     1: load("res://Sprites/powerup_barrier_icon.png"),
@@ -12,17 +10,16 @@ onready var POWERUP_SPRITEMAP : Dictionary = {
     3: load("res://Sprites/powerup_homing_icon.png")
 }
     
+var powerup_id : int = 2
+var player : Node2D
+
 func _process(_delta):
     update_timer()
     update_icon_position()
 
 func update_timer():
-    if !the_world.get_player().is_alive():
-        player = null
-        return
-    
     if player == null:
-        player = the_world.get_player()
+        player = the_game.get_player()
         return
     
     if $Icon.texture == null:
@@ -39,7 +36,7 @@ func update_timer():
     
 func update_icon_position():
     var index = 0
-    for icon in list_of_icons.get_children():
+    for icon in icon_container.get_children():
         if icon == self:
             break
         

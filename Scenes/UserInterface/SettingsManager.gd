@@ -2,7 +2,7 @@ extends Node
 
 var SETTINGS : Dictionary = {
     "aspect_ratio": 0,
-    "resolution_id": 2,
+    "resolution_id": 1,
     "resolution_x": 1366,
     "resolution_y": 768,
     "display_mode": 0
@@ -37,7 +37,7 @@ func use_settings():
     if previous_ratio_id != get_setting("aspect_ratio") or previous_reso_id != get_setting("resolution_id"):
         previous_ratio_id = get_setting("aspect_ratio")
         previous_reso_id = get_setting("resolution_id")
-        
+
         if get_setting("resolution_x") < screen_size.x and get_setting("resolution_y") < screen_size.y:
             OS.window_maximized = false
         
