@@ -1,23 +1,26 @@
 [gd_scene load_steps=8 format=2]
 
-[ext_resource path="res://Scenes/UserInterface/SettingsManager.gd" type="Script" id=1]
-[ext_resource path="res://Scenes/UserInterface/Scoring/ScoreManager.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Scenes/SettingsManager.gd" type="Script" id=1]
+[ext_resource path="res://Scenes/Ingame/HUD/ScoreManager.gd" type="Script" id=2]
 [ext_resource path="res://Scenes/Game.gd" type="Script" id=3]
-[ext_resource path="res://Scenes/UserInterface/Interface.tscn" type="PackedScene" id=4]
+[ext_resource path="res://Scenes/Interface.tscn" type="PackedScene" id=4]
 [ext_resource path="res://Sprites/checkerboard.png" type="Texture" id=5]
-[ext_resource path="res://Scenes/Powerups/PowerupSpawner.tscn" type="PackedScene" id=6]
-[ext_resource path="res://Scenes/Enemies/EnemySpawner.tscn" type="PackedScene" id=7]
+[ext_resource path="res://Scenes/Ingame/Powerups/PowerupSpawner.gd" type="Script" id=6]
+[ext_resource path="res://Scenes/Ingame/EnemySpawner.gd" type="Script" id=7]
 
 [node name="Game" type="Node2D"]
 script = ExtResource( 3 )
 
 [node name="Interface" parent="." instance=ExtResource( 4 )]
 
-[node name="EnemySpawner" parent="." instance=ExtResource( 7 )]
+[node name="EnemySpawner" type="Node" parent="."]
+script = ExtResource( 7 )
 
-[node name="PowerupSpawner" parent="." instance=ExtResource( 6 )]
+[node name="PowerupSpawner" type="Node" parent="."]
+script = ExtResource( 6 )
 
-[node name="ScoreManager" parent="." instance=ExtResource( 2 )]
+[node name="ScoreManager" type="Node" parent="."]
+script = ExtResource( 2 )
 
 [node name="SettingsManager" type="Node" parent="."]
 script = ExtResource( 1 )
