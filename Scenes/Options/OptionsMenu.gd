@@ -30,7 +30,7 @@ var using_option_button : bool = false
 var original_ob_selection : int
 
 func _process(_delta):    
-    if !the_game.is_any_current_state(ACTIVE_STATES):
+    if not the_game.is_any_current_state(ACTIVE_STATES):
         return
             
     if using_option_button:
@@ -119,7 +119,7 @@ func press_current_node_button():
         button._pressed()
 
 func set_option_mode(value : bool):
-    if using_option_button and !value:
+    if using_option_button and not value:
         Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
         current_node.get_node("ArrowLeft").visible = false
         current_node.get_node("ArrowRight").visible = false

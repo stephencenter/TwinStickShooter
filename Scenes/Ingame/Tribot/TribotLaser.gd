@@ -17,7 +17,7 @@ func _ready():
     lifespan_timer.start(LASER_LIFESPAN)
     
 func _process(delta):
-    if !the_game.is_any_current_state(ACTIVE_STATES):
+    if not the_game.is_any_current_state(ACTIVE_STATES):
         return    
               
     process_movement(delta) 
@@ -28,7 +28,7 @@ func process_movement(delta):
     global_position += current_velocity*delta
     
 func attempt_damage_player():
-    if !the_game.get_player().is_alive():
+    if not the_game.get_player().is_alive():
         return
         
     for area in hitbox.get_overlapping_areas():
@@ -48,5 +48,5 @@ func manage_lifespan_timer():
     if the_game.is_object_on_screen(self):
         lifespan_timer.start(LASER_LIFESPAN)
     
-    if lifespan_timer.time_left == 0:
+    if lifespan_timer.is_stopped():
         queue_free()

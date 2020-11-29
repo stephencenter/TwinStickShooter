@@ -19,7 +19,7 @@ func _ready():
     lifespan_timer.start(ENEMY_LIFESPAN)
         
 func _process(delta):
-    if !the_game.is_any_current_state(ACTIVE_STATES):
+    if not the_game.is_any_current_state(ACTIVE_STATES):
         return    
    
     process_movement(delta)
@@ -48,5 +48,5 @@ func manage_lifespan_timer():
     if the_game.is_object_on_screen(self):
         lifespan_timer.start(ENEMY_LIFESPAN)
     
-    if lifespan_timer.time_left == 0:
+    if lifespan_timer.is_stopped():
         queue_free()

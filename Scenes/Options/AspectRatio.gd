@@ -13,7 +13,7 @@ func _ready():
     select(config.get_setting("aspect_ratio"))
 
 func _process(_delta):
-    if !the_game.is_any_current_state(ACTIVE_STATES):
+    if not the_game.is_any_current_state(ACTIVE_STATES):
         return
         
     config.set_temp_setting("aspect_ratio", get_selected_id())

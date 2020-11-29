@@ -18,14 +18,14 @@ func _ready():
     current_health = ENEMY_MAX_HEALTH
       
 func _process(_delta):
-    if !the_game.is_any_current_state(ACTIVE_STATES) or !the_game.get_player().is_alive():
+    if not the_game.is_any_current_state(ACTIVE_STATES) or not the_game.get_player().is_alive():
         return
         
-    if long_timer.time_left == 0:
+    if long_timer.is_stopped():
         remaining_lasers = NUM_LASERS
         long_timer.start(LASER_COOLDOWN_LONG)
     
-    if short_timer.time_left == 0 and remaining_lasers > 0:
+    if short_timer.is_stopped() and remaining_lasers > 0:
         fire_laser()
         remaining_lasers -= 1
         short_timer.start(LASER_COOLDOWN_SHORT)

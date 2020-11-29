@@ -22,7 +22,7 @@ func _ready():
     select(config.get_setting("resolution_id"))
     
 func _process(_delta):
-    if !the_game.is_any_current_state(ACTIVE_STATES):
+    if not the_game.is_any_current_state(ACTIVE_STATES):
         return    
         
     var ratio = get_current_aspect_ratio()
@@ -40,7 +40,7 @@ func repopulate_resolution_list():
     var screen_size = OS.get_screen_size()
     var index = 0
     for reso in RESOLUTION_LIST[current_aspect_ratio]:
-        if !(reso[0] > screen_size.x or reso[1] > screen_size.y):
+        if not reso[0] > screen_size.x or not reso[1] > screen_size.y:
             add_item("%sx%s" % [reso[0], reso[1]], index)
             
         index += 1

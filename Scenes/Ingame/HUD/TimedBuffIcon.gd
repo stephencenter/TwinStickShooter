@@ -16,7 +16,7 @@ var powerup_id : int = 2
 var player : Node2D
 
 func _process(_delta):
-    if !the_game.is_any_current_state(ACTIVE_STATES):
+    if not the_game.is_any_current_state(ACTIVE_STATES):
         return
         
     update_timer()

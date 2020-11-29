@@ -36,27 +36,27 @@ const MiRRORGiRL_INITIAL_SPAWN_TIME : float = 120.0
 const MiRRORGiRL_TIME_MULTIPLIER : float = 120.0
       
 func _process(_delta):
-    if !the_game.is_any_current_state(ACTIVE_STATES):
+    if not the_game.is_any_current_state(ACTIVE_STATES):
         return    
 
     if the_game.get_player().is_alive():
-        if jellybelly_timer.time_left == 0:
+        if jellybelly_timer.is_stopped():
             spawn_jellybelly()
             jellybelly_timer.start(time_between_enemies*JELLYBELLY_TIME_MULTIPLIER)
         
-        if raysnake_timer.time_left == 0:
+        if raysnake_timer.is_stopped():
             spawn_raysnake()
             raysnake_timer.start(time_between_enemies*RAYSNAKE_TIME_MULTIPLIER)
             
-        if tribot_timer.time_left == 0:
+        if tribot_timer.is_stopped():
             spawn_tribot()
             tribot_timer.start(time_between_enemies*TRIBOT_TIME_MULTIPLIER)
         
-        if mirrorgirl_timer.time_left == 0:
+        if mirrorgirl_timer.is_stopped():
             spawn_mirrorgirl()
             mirrorgirl_timer.start(time_between_enemies*MiRRORGiRL_TIME_MULTIPLIER)
             
-        if difficulty_timer.time_left == 0:
+        if difficulty_timer.is_stopped():
             increase_difficulty()
             difficulty_timer.start(TIME_BETWEEN_DIFFICULTY_TICKS)
 

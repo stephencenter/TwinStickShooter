@@ -9,7 +9,7 @@ onready var radio_sprite_on : Texture = load("res://Sprites/radio_on.png")
 onready var radio_sprite_off : Texture = load("res://Sprites/radio_off.png")
 
 func _process(_delta):
-    if !the_game.is_any_current_state(ACTIVE_STATES):
+    if not the_game.is_any_current_state(ACTIVE_STATES):
         return
         
     update_button_icon()

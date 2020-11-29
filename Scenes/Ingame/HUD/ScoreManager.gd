@@ -11,7 +11,7 @@ const POINTS_PER_TICK : int = 10
 var current_score : int = 0
       
 func _process(_delta):
-    if !the_game.is_any_current_state(ACTIVE_STATES):
+    if not the_game.is_any_current_state(ACTIVE_STATES):
         return    
         
     if the_game.get_player().is_alive():
@@ -22,7 +22,7 @@ func start_scoring():
     points_timer.start(TIME_BETWEEN_POINTS)
 
 func reward_alive_points():
-    if points_timer.time_left == 0:
+    if points_timer.is_stopped():
         current_score += POINTS_PER_TICK
         points_timer.start(TIME_BETWEEN_POINTS)
         

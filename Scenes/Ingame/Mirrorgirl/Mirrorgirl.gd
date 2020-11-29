@@ -13,7 +13,7 @@ onready var orbit_timer = timer_class.new([the_game.GameState.INGAME], the_game)
 onready var reflect_timer = timer_class.new([the_game.GameState.INGAME], the_game)
     
 func _process(_delta):
-    if !the_game.is_any_current_state(ACTIVE_STATES):
+    if not the_game.is_any_current_state(ACTIVE_STATES):
         return
         
     reflect_bullets()
@@ -27,11 +27,11 @@ func process_movement(var delta : float):
     var target_vec = (global_position - player_pos).normalized()
     var target_point : Vector2
     
-    if variance < MIRROR_ORBIT_DEADZONE and !attached:
+    if variance < MIRROR_ORBIT_DEADZONE and not attached:
         attached = true
         orbit_timer.start(MIRROR_ORBIT_DURATION)
         
-    if attached and orbit_timer.time_left > 0:
+    if attached and not orbit_timer.is_stopped():
         global_position = target_vec*MIRROR_ORBIT_DISTANCE + player_pos
         var c_angle = get_current_angle()
         target_point = global_position + Vector2(-c_angle.y, c_angle.x)
@@ -39,7 +39,7 @@ func process_movement(var delta : float):
     else:
         target_point = target_vec*MIRROR_ORBIT_DISTANCE + player_pos
     
-    if orbit_timer.time_left > 0 or !attached:
+    if not orbit_timer.is_stopped() or not attached:
         current_velocity = (target_point - global_position).normalized()*MIRROR_MOVE_SPEED
     
     global_position += current_velocity*delta
@@ -48,7 +48,7 @@ func get_current_angle() -> Vector2:
     return (global_position - the_game.get_player_global_position()).normalized()
 
 func reflect_bullets():
-    if reflect_timer.time_left > 0:
+    if not reflect_timer.is_stopped():
         return
         
     var areas = reflector.get_overlapping_areas()

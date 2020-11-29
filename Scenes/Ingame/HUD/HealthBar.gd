@@ -8,7 +8,7 @@ onready var hbar_size : Vector2 = $Border.rect_size
 onready var hp_label : Label = $HealthLabel
 
 func _process(_delta):
-    if !the_game.is_any_current_state(ACTIVE_STATES):
+    if not the_game.is_any_current_state(ACTIVE_STATES):
         return
         
     var player = the_game.get_player()

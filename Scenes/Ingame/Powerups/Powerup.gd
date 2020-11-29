@@ -26,11 +26,11 @@ func _ready():
     lifespan_timer.start(POWERUP_LIFESPAN)
           
 func _process(_delta):
-    if !the_game.is_any_current_state(ACTIVE_STATES):
+    if not the_game.is_any_current_state(ACTIVE_STATES):
         return    
         
     flicker_sprite()
-    if lifespan_timer.time_left == 0:
+    if lifespan_timer.is_stopped():
         queue_free()
 
 # Methods
@@ -50,7 +50,7 @@ func set_powerup_type(new_type : int):
     sprite.get_node("Icon").texture = POWERUP_SPRITEMAP[powerup_type]
 
 func flicker_sprite():
-    if lifespan_timer.time_left < POWERUP_FLICKER_START:
-        if flicker_timer.time_left == 0:
-            $Sprite.visible = !$Sprite.visible
-            flicker_timer.start(lifespan_timer.time_left/POWERUP_FLICKER_TIME)
+    var time_left = lifespan_timer.get_time_left()
+    if time_left < POWERUP_FLICKER_START and flicker_timer.is_stopped():
+        $Sprite.visible = not $Sprite.visible
+        flicker_timer.start(time_left/POWERUP_FLICKER_TIME)

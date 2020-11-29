@@ -9,11 +9,11 @@ onready var success_timer = timer_class.new([the_game.GameState.OPTIONS], the_ga
 onready var success_label = get_parent().get_parent().get_node("SuccessLabel")
 
 func _process(_delta):
-    if !the_game.is_any_current_state(ACTIVE_STATES):
+    if not the_game.is_any_current_state(ACTIVE_STATES):
         success_label.set_text("")
         return
         
-    if success_timer.time_left == 0:
+    if success_timer.is_stopped():
         success_label.set_text("")
     
 func _pressed():

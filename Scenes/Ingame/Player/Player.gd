@@ -16,6 +16,8 @@ const JOY_RIGHT_DEADZONE : float = 0.5
 const JOY_CROSSHAIR_DISTANCE : float = 120.0
 const PLAYER_INVINCE_TIME : float = 1.5
 const PLAYER_FLICKER_TIME : float = 0.1
+const PLAYER_DASH_SPEED : float = 1500.0
+const PLAYER_DASH_DURATION : float = 0.15
 
 onready var timer_class = load("res://Scenes/SmartTimer.gd")
 onready var bullet_scene = load("res://Scenes/Ingame/Player/Bullet.tscn")
@@ -26,6 +28,7 @@ onready var joy_crosshair : Sprite = $Crosshair
 onready var pf_timer = timer_class.new([the_game.GameState.INGAME], the_game)
 onready var inv_timer = timer_class.new([the_game.GameState.INGAME], the_game)
 onready var flicker_timer = timer_class.new([the_game.GameState.INGAME], the_game)
+onready var dash_timer = timer_class.new([the_game.GameState.INGAME], the_game)
 
 onready var powerup_timers = {
     0: timer_class.new([the_game.GameState.INGAME], the_game),
@@ -36,6 +39,7 @@ onready var powerup_timers = {
 
 var current_velocity : Vector2
 var movement_vector : Vector2
+var dash_direction : Vector2
 var current_aim : Vector2
 var aim_vector : Vector2
 var aimed_mouse : bool = false
@@ -43,10 +47,10 @@ var current_health : int = PLAYER_MAX_HEALTH
 
 # Updates        
 func _process(delta):
-    if !the_game.is_any_current_state(ACTIVE_STATES):
+    if not the_game.is_any_current_state(ACTIVE_STATES):
         return    
    
-    if !is_alive():
+    if not is_alive():
         visible = false
         return
         
@@ -58,8 +62,8 @@ func _process(delta):
     update_barrier_sprite()
     invincibility_sprite_flicker()
 
-    if pf_timer.time_left == 0:
-        action_primary_fire()
+    if pf_timer.is_stopped():
+        action_primary_fire()	
 
 func _input(event):
     if event is InputEventMouseMotion:
@@ -75,14 +79,21 @@ func process_input(_delta):
     
     if Input.get_mouse_mode() == Input.MOUSE_MODE_VISIBLE:
         aim_vector = get_global_mouse_position() - global_position
+        
+    if Input.is_action_just_pressed("dash"):
+        action_dash()
     
-func process_movement(delta):
-    movement_vector = movement_vector*PLAYER_MAX_SPEED
-    
-    if movement_vector.length() > 0:
-        current_velocity = current_velocity.linear_interpolate(movement_vector, PLAYER_ACCELERATION)
+func process_movement(delta):		
+    if not dash_timer.is_stopped():
+        current_velocity = dash_direction*PLAYER_DASH_SPEED
+        
     else:
-        current_velocity = current_velocity.linear_interpolate(Vector2.ZERO, PLAYER_DECELERATION)
+        movement_vector = movement_vector*PLAYER_MAX_SPEED
+        
+        if movement_vector.length() > 0:
+            current_velocity = current_velocity.linear_interpolate(movement_vector, PLAYER_ACCELERATION)
+        else:
+            current_velocity = current_velocity.linear_interpolate(Vector2.ZERO, PLAYER_DECELERATION)
     
     global_position += current_velocity*delta
     clamp_position()
@@ -152,9 +163,9 @@ func get_aim_joystick() -> Vector2:
     return aim_vec.normalized()
  
 func invincibility_sprite_flicker():
-    if inv_timer.time_left > 0:
-        if flicker_timer.time_left == 0:
-            $PlayerSprite.visible = !$PlayerSprite.visible
+    if not inv_timer.is_stopped():
+        if flicker_timer.is_stopped():
+            $PlayerSprite.visible = not $PlayerSprite.visible
             flicker_timer.start(PLAYER_FLICKER_TIME)
         
     else:
@@ -169,12 +180,12 @@ func get_crosshair_position():
     return joy_crosshair.global_position
     
 func update_barrier_sprite():
-    $BarrierSprite.visible = powerup_timers[1].time_left > 0
+    $BarrierSprite.visible = not powerup_timers[1].is_stopped()
 
 # Helpers   
 func attempt_collect_powerups():
     var areas = collection_radius.get_overlapping_areas()
-    if !areas.empty():
+    if not areas.empty():
         var powerup = areas[0].get_parent()
         
         if powerup.get_parent() != null:
@@ -187,13 +198,13 @@ func cancel_powerup(powerup : int):
     powerup_timers[powerup].stop()
     
 func has_powerup(powerup : int) -> bool:
-    return powerup_timers[powerup].time_left > 0
+    return not powerup_timers[powerup].is_stopped()
 
 func get_powerup_time_remaining(powerup : int) -> float:
-    return powerup_timers[powerup].time_left
+    return powerup_timers[powerup].get_time_left()
 
 func take_damage_from_enemy(damage_amount : int):
-    if inv_timer.time_left > 0 or damage_amount == 0:
+    if not inv_timer.is_stopped() or not dash_timer.is_stopped() or damage_amount == 0:
         return
         
     if has_powerup(1):
@@ -222,3 +233,16 @@ func action_primary_fire():
     bullet_obj.set_bullet_velocity(current_aim)
     
     pf_timer.start(PRIMARY_FIRE_CD)
+
+func action_dash():
+    var direction = movement_vector.normalized()
+    
+    if direction.length() == 0:
+        return
+    
+    if not dash_timer.is_stopped():
+        return
+        
+    dash_direction = direction
+    dash_timer.start(PLAYER_DASH_DURATION)
+    

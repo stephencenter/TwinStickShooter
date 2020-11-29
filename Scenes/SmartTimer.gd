@@ -4,7 +4,8 @@ extends Node
 # specific gamestates
 var the_game
 var active_states : Array
-var time_left : float
+var _time_left : float
+var _stopped : bool
 
 func _init(var states : Array, var root):
     active_states = states
@@ -12,11 +13,25 @@ func _init(var states : Array, var root):
     the_game = root
     
 func _process(delta):
-    if !the_game.is_any_current_state(active_states):
+    if not the_game.is_any_current_state(active_states):
         return
+    
+    if _time_left <= 0 or _stopped:
+        _stopped = true
+        _time_left = 0
         
-    time_left -= delta
-    time_left = max(0, time_left)
+    else:
+        _time_left -= delta
 
 func start(new_time : float):
-    time_left = new_time
+    _time_left = new_time
+    _stopped = false
+    
+func stop():
+    _stopped = true
+    
+func is_stopped() -> bool:
+    return _stopped
+    
+func get_time_left() -> float:
+    return _time_left

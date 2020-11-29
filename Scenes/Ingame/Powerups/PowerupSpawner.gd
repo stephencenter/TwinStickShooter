@@ -11,11 +11,11 @@ const TIME_BETWEEN_POWERUPS : float = 16.0
 var previous_powerup : int = -1
       
 func _process(_delta):
-    if !the_game.is_any_current_state(ACTIVE_STATES):
+    if not the_game.is_any_current_state(ACTIVE_STATES):
         return    
         
     if the_game.get_player().is_alive():            
-        if powerup_spawn_timer.time_left == 0:
+        if powerup_spawn_timer.is_stopped():
             spawn_powerup()
             powerup_spawn_timer.start(TIME_BETWEEN_POWERUPS)
 

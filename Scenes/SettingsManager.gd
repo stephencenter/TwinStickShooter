@@ -2,9 +2,9 @@ extends Node
 
 var SETTINGS : Dictionary = {
     "aspect_ratio": 0,
-    "resolution_id": 1,
-    "resolution_x": 1366,
-    "resolution_y": 768,
+    "resolution_id": 2,
+    "resolution_x": 1600,
+    "resolution_y": 900,
     "display_mode": 0
 }       
 

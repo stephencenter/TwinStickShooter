@@ -36,7 +36,7 @@ func titlescreen_process(_delta):
         advance_game_state(GameState.INGAME)
     
 func ingame_process(_delta):
-    if !get_player().is_alive() and Input.is_action_just_pressed("new_game"):
+    if not get_player().is_alive() and Input.is_action_just_pressed("new_game"):
         start_new_game()
         
     if Input.is_action_just_pressed("pause"):
@@ -118,9 +118,9 @@ func is_any_current_state(state_list : Array) -> bool:
     return state_list.has(get_current_state())
 
 func advance_game_state(state : int):
-    if !is_current_state(state):
+    if not is_current_state(state):
         state_path.append(state)
     
 func revert_game_state():
-    if !state_path.empty():
+    if not state_path.empty():
         state_path.remove(state_path.size() - 1)
