@@ -39,7 +39,8 @@ func fire_laser():
     
     var aim_direction = the_game.get_player_global_position() - global_position
     laser_obj.set_initial_position(global_position)
-    laser_obj.set_laser_velocity(aim_direction)
+    laser_obj.set_initial_velocity(aim_direction)
+    laser_obj.set_projectile_owner(self)
 
 func set_tribot_velocity(direction : Vector2):
     direction = direction.normalized()

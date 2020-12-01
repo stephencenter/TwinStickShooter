@@ -29,17 +29,20 @@ func _process(delta):
 func process_movement(var _delta : float):
     pass
     
-func take_damage_from_player(damage_amount : int):        
+func take_damage(damage_amount : int):        
     current_health -= damage_amount
     if current_health <= 0:
         score_manager.reward_enemy_points(self)
         queue_free()
 
+func is_alive() -> bool:
+    return current_health > 0
+    
 func attempt_damage_player():        
     for area in hitbox.get_overlapping_areas():
         var entity = area.get_parent()
         if entity == the_game.get_player():
-            entity.take_damage_from_enemy(ENEMY_ATTACK_DAMAGE)
+            entity.take_damage(ENEMY_ATTACK_DAMAGE)
     
 func set_initial_position(initial_pos : Vector2):
     global_position = initial_pos

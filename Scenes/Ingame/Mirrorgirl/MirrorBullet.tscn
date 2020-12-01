@@ -3,8 +3,6 @@
 [ext_resource path="res://Sprites/evil_bullet.png" type="Texture" id=1]
 [ext_resource path="res://Scenes/Ingame/Mirrorgirl/MirrorBullet.gd" type="Script" id=2]
 
-
-
 [sub_resource type="CircleShape2D" id=1]
 radius = 8.0
 

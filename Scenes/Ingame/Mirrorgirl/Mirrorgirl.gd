@@ -18,7 +18,7 @@ func _process(_delta):
         
     reflect_bullets()
 
-func take_damage_from_player(_value):
+func take_damage(_value):
     return
 
 func process_movement(var delta : float):
@@ -55,8 +55,10 @@ func reflect_bullets():
     if areas.empty():
         return
         
-    areas[0].get_parent().queue_free()
-    var bullet_obj = bullet_scene.instance()
-    get_parent().add_child(bullet_obj)
-    bullet_obj.global_position = global_position
+    var old_bullet = areas[0].get_parent()
+    var evil_bullet = bullet_scene.instance()
+    get_parent().add_child(evil_bullet)
+    evil_bullet.global_position = global_position
+    evil_bullet.set_projectile_owner(self)
+    evil_bullet.set_projectile_target(old_bullet.PROJECTILE_OWNER)
     reflect_timer.start(MIRROR_REFLECTION_CD)

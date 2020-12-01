@@ -3,8 +3,6 @@
 [ext_resource path="res://Sprites/tribot.png" type="Texture" id=1]
 [ext_resource path="res://Scenes/Ingame/Tribot/Tribot.gd" type="Script" id=2]
 
-
-
 [sub_resource type="CapsuleShape2D" id=1]
 radius = 36.0
 height = 16.0
