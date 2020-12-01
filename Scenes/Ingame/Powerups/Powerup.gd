@@ -10,8 +10,8 @@ enum POWERUP_TYPES {SURROUND=0, BARRIER=1, MULTISHOT=2, HOMING=3}
 
 onready var timer_class = load("res://Scenes/SmartTimer.gd")
 onready var sprite : Node2D = $Sprite
-onready var flicker_timer = timer_class.new([the_game.GameState.INGAME], the_game)
-onready var lifespan_timer = timer_class.new([the_game.GameState.INGAME], the_game)
+onready var flicker_timer = timer_class.new(ACTIVE_STATES, the_game)
+onready var lifespan_timer = timer_class.new(ACTIVE_STATES, the_game)
 onready var POWERUP_SPRITEMAP : Dictionary = {
     POWERUP_TYPES.SURROUND: load("res://Sprites/powerup_surround_icon.png"),
     POWERUP_TYPES.BARRIER: load("res://Sprites/powerup_barrier_icon.png"),

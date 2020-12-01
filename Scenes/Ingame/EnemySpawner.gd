@@ -13,31 +13,35 @@ var difficulty_ticks : int = 0
 
 # Spawn timers
 onready var timer_class = load("res://Scenes/SmartTimer.gd")
-onready var difficulty_timer = timer_class.new([the_game.GameState.INGAME], the_game)
+onready var difficulty_timer = timer_class.new(ACTIVE_STATES, the_game)
 
-onready var jellybelly_timer = timer_class.new([the_game.GameState.INGAME], the_game)
+# Jellybelly timers
+onready var jellybelly_timer = timer_class.new(ACTIVE_STATES, the_game)
 onready var jellybelly_scene = load("res://Scenes/Ingame/Jellybelly/Jellybelly.tscn")
 const JELLYBELLY_INITIAL_SPAWN_TIME : float = 0.0
 const JELLYBELLY_TIME_MULTIPLIER : float = 0.5
 
+# Raysnake timers
 onready var raysnake_scene = load("res://Scenes/Ingame/Raysnake/Raysnake.tscn")
-onready var raysnake_timer = timer_class.new([the_game.GameState.INGAME], the_game)
+onready var raysnake_timer = timer_class.new(ACTIVE_STATES, the_game)
 const RAYSNAKE_INITIAL_SPAWN_TIME : float = 30.0
 const RAYSNAKE_TIME_MULTIPLIER : float = 20.0
 
+# Tribot timers
 onready var tribot_scene = load("res://Scenes/Ingame/Tribot/Tribot.tscn")
-onready var tribot_timer = timer_class.new([the_game.GameState.INGAME], the_game)
+onready var tribot_timer = timer_class.new(ACTIVE_STATES, the_game)
 const TRIBOT_INITIAL_SPAWN_TIME : float = 60.0
 const TRIBOT_TIME_MULTIPLIER : float = 40.0
 
+# Mirrorgirl timers
 onready var mirrorgirl_scene = load("res://Scenes/Ingame/Mirrorgirl/Mirrorgirl.tscn")
-onready var mirrorgirl_timer = timer_class.new([the_game.GameState.INGAME], the_game)
+onready var mirrorgirl_timer = timer_class.new(ACTIVE_STATES, the_game)
 const MiRRORGiRL_INITIAL_SPAWN_TIME : float = 120.0
 const MiRRORGiRL_TIME_MULTIPLIER : float = 120.0
-      
+
 func _process(_delta):
     if not the_game.is_any_current_state(ACTIVE_STATES):
-        return    
+        return
 
     if the_game.get_player().is_alive():
         if jellybelly_timer.is_stopped():
@@ -81,7 +85,7 @@ func increase_difficulty():
     else:
         time_between_enemies = MIN_TIME_BETWEEN_ENEMIES
         
-# Enemy spawner
+# Jellybelly spawner
 func get_jellybelly_spawnpoint(chosen_side : String) -> Vector2:
     # This chooses a random point along the specified edge of the screen.
     # This is used to determine where to spawn enemies
@@ -139,11 +143,11 @@ func spawn_jellybelly():
     var spawn_point = get_jellybelly_spawnpoint(chosen_side)
     var spawn_angle = get_jellybelly_spawnangle(chosen_side)
     var new_enemy = jellybelly_scene.instance()
+    the_game.add_new_object(new_enemy)
     new_enemy.set_initial_position(spawn_point)
     new_enemy.set_jelly_velocity(spawn_angle)
-    the_game.add_new_object(new_enemy)
     
-# Enemy spawner
+# Raysnake spawner
 func get_raysnake_spawnpoint() -> Vector2:
     var player_pos = the_game.get_player_global_position()
     var world_rect = the_game.get_visible_world_rect()
@@ -200,10 +204,11 @@ func spawn_raysnake():
     var spawn_angle = get_raysnake_spawnangle(spawn_point)
     
     var new_enemy = raysnake_scene.instance()
+    the_game.add_new_object(new_enemy)
     new_enemy.set_initial_position(spawn_point)
     new_enemy.set_snake_velocity(spawn_angle)
-    the_game.add_new_object(new_enemy)
 
+# Tribot spawner
 func get_tribot_spawnside():
     var options = [
         ["topleft", "down"], ["topleft", "right"], 
@@ -278,15 +283,15 @@ func spawn_tribot():
     var spawn_angle = get_tribot_spawnangle(spawn_side[1])
     
     var new_enemy = tribot_scene.instance()
+    the_game.add_new_object(new_enemy)
     new_enemy.set_initial_position(spawn_point)
     new_enemy.set_tribot_velocity(spawn_angle)
-    the_game.add_new_object(new_enemy)
 
-
+# Mirrorgirl timer
 func spawn_mirrorgirl():
     var sides : Array = ["up", "down", "left", "right"]
     var chosen_side = sides[randi() % sides.size()]
     var spawn_point = get_jellybelly_spawnpoint(chosen_side)
     var new_enemy = mirrorgirl_scene.instance()
-    new_enemy.set_initial_position(spawn_point)
     the_game.add_new_object(new_enemy)
+    new_enemy.set_initial_position(spawn_point)

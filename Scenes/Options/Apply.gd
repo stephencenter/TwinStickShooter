@@ -5,7 +5,7 @@ onready var ACTIVE_STATES : Array = [the_game.GameState.OPTIONS]
 
 onready var timer_class = load("res://Scenes/SmartTimer.gd")
 onready var config = get_tree().get_root().get_node("Game/SettingsManager")
-onready var success_timer = timer_class.new([the_game.GameState.OPTIONS], the_game)
+onready var success_timer = timer_class.new(ACTIVE_STATES, the_game)
 onready var success_label = get_parent().get_parent().get_node("SuccessLabel")
 
 func _process(_delta):

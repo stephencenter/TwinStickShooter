@@ -1,10 +1,9 @@
 extends Node
 
 onready var the_game = get_tree().get_root().get_node("Game")
-onready var ACTIVE_STATES : Array = [the_game.GameState.INGAME]
-
 onready var timer_class = load("res://Scenes/SmartTimer.gd")
-onready var points_timer = timer_class.new([the_game.GameState.INGAME], the_game)
+onready var ACTIVE_STATES : Array = [the_game.GameState.INGAME]
+onready var points_timer = timer_class.new(ACTIVE_STATES, the_game)
 
 const TIME_BETWEEN_POINTS : float = 0.02
 const POINTS_PER_TICK : int = 10

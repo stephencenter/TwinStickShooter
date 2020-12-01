@@ -5,7 +5,7 @@ onready var ACTIVE_STATES : Array = [the_game.GameState.INGAME]
 
 onready var timer_class = load("res://Scenes/SmartTimer.gd")
 onready var powerup_to_spawn = load("res://Scenes/Ingame/Powerups/Powerup.tscn")
-onready var powerup_spawn_timer = timer_class.new([the_game.GameState.INGAME], the_game)
+onready var powerup_spawn_timer = timer_class.new(ACTIVE_STATES, the_game)
 
 const TIME_BETWEEN_POWERUPS : float = 16.0
 var previous_powerup : int = -1

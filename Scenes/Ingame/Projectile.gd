@@ -1,5 +1,10 @@
 extends Node2D
 
+onready var the_game : Node2D = get_tree().get_root().get_node("Game")
+onready var timer_class = load("res://Scenes/SmartTimer.gd")
+onready var ACTIVE_STATES : Array = [the_game.GameState.INGAME]
+onready var lifespan_timer = timer_class.new(ACTIVE_STATES, the_game)
+
 const PROJECTILE_LIFESPAN = 0.5
 var PROJECTILE_DAMAGE : int
 var PROJECTILE_TRAVEL_SPEED : float
@@ -9,11 +14,22 @@ var PIERCES_ENTITIES : bool
 var current_velocity : Vector2
 
 func _ready():
-    pass
+    lifespan_timer.start(PROJECTILE_LIFESPAN)
 
 func _process(delta):
+    if not the_game.is_any_current_state(ACTIVE_STATES):
+        return
+        
     process_movement(delta)
     attempt_damage_entities()
+    manage_lifespan_timer()
+        
+func manage_lifespan_timer():
+    if the_game.is_object_on_screen(self):
+        lifespan_timer.start(PROJECTILE_LIFESPAN)
+    
+    if lifespan_timer.is_stopped():
+        queue_free()
 
 func process_movement(delta):
     if PROJECTILE_TARGET != null:

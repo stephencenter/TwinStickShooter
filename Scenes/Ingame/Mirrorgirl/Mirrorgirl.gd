@@ -1,6 +1,5 @@
 extends "res://Scenes/Ingame/Enemy.gd"
 
-const MIRROR_MOVE_SPEED : float = 300.0
 const MIRROR_ORBIT_DISTANCE : float = 200.0
 const MIRROR_ORBIT_DEADZONE : float = 2.0
 const MIRROR_ORBIT_DURATION : float = 12.0
@@ -8,14 +7,13 @@ const MIRROR_REFLECTION_CD : float = 1.5
 var attached = false
 
 onready var bullet_scene = load("res://Scenes/Ingame/Mirrorgirl/MirrorBullet.tscn")
-onready var reflector = $Reflector
-onready var orbit_timer = timer_class.new([the_game.GameState.INGAME], the_game)
-onready var reflect_timer = timer_class.new([the_game.GameState.INGAME], the_game)
+onready var orbit_timer = timer_class.new(ACTIVE_STATES, the_game)
+onready var reflect_timer = timer_class.new(ACTIVE_STATES, the_game)
+
+func _ready():
+    self.ENEMY_MOVE_SPEED = 300.0
     
 func _process(_delta):
-    if not the_game.is_any_current_state(ACTIVE_STATES):
-        return
-        
     reflect_bullets()
 
 func take_damage(_value):
@@ -40,7 +38,7 @@ func process_movement(var delta : float):
         target_point = target_vec*MIRROR_ORBIT_DISTANCE + player_pos
     
     if not orbit_timer.is_stopped() or not attached:
-        current_velocity = (target_point - global_position).normalized()*MIRROR_MOVE_SPEED
+        current_velocity = (target_point - global_position).normalized()*ENEMY_MOVE_SPEED
     
     global_position += current_velocity*delta
 
@@ -51,7 +49,7 @@ func reflect_bullets():
     if not reflect_timer.is_stopped():
         return
         
-    var areas = reflector.get_overlapping_areas()
+    var areas = $Reflector.get_overlapping_areas()
     if areas.empty():
         return
         

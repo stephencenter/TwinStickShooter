@@ -1,17 +1,15 @@
 extends "res://Scenes/Ingame/Enemy.gd"
 
-const JELLY_MIN_SPEED : float = 100.0
-const JELLY_MAX_SPEED : float = 167.0
-
 func _ready():
-    ENEMY_MAX_HEALTH = 3
-    ENEMY_ATTACK_DAMAGE = 1
-    ENEMY_POINT_REWARD = 1000
-    current_health = ENEMY_MAX_HEALTH
+    self.ENEMY_MAX_HEALTH = 3
+    self.ENEMY_ATTACK_DAMAGE = 1
+    self.ENEMY_POINT_REWARD = 1000
+    self.ENEMY_MOVE_SPEED = rand_range(100.0, 167.0)
+    self.current_health = ENEMY_MAX_HEALTH
     
-func process_movement(var delta : float):
+func process_movement(var delta):
     global_position += current_velocity*delta
 
 func set_jelly_velocity(direction : Vector2):
     direction = direction.normalized()
-    current_velocity = direction*rand_range(JELLY_MIN_SPEED, JELLY_MAX_SPEED)
+    current_velocity = direction*ENEMY_MOVE_SPEED

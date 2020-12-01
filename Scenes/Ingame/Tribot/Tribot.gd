@@ -1,20 +1,19 @@
 extends "res://Scenes/Ingame/Enemy.gd"
 
-const TRIBOT_MAX_SPEED : float = 80.0
 const LASER_COOLDOWN_LONG : float = 3.0
 const LASER_COOLDOWN_SHORT : float = 0.35
 const NUM_LASERS : int = 3
-
-onready var laser_scene = load("res://Scenes/Ingame/Tribot/TribotLaser.tscn")
-onready var long_timer = timer_class.new([the_game.GameState.INGAME], the_game)
-onready var short_timer = timer_class.new([the_game.GameState.INGAME], the_game)
-
 var remaining_lasers = 0
 
+onready var laser_scene = load("res://Scenes/Ingame/Tribot/TribotLaser.tscn")
+onready var long_timer = timer_class.new(ACTIVE_STATES, the_game)
+onready var short_timer = timer_class.new(ACTIVE_STATES, the_game)
+
 func _ready():
-    ENEMY_MAX_HEALTH = 6
-    ENEMY_ATTACK_DAMAGE = 1
-    ENEMY_POINT_REWARD = 3000
+    self.ENEMY_MAX_HEALTH = 6
+    self.ENEMY_ATTACK_DAMAGE = 1
+    self.ENEMY_POINT_REWARD = 3000
+    self.ENEMY_MOVE_SPEED = 80.0
     current_health = ENEMY_MAX_HEALTH
       
 func _process(_delta):
@@ -44,4 +43,4 @@ func fire_laser():
 
 func set_tribot_velocity(direction : Vector2):
     direction = direction.normalized()
-    current_velocity = direction*TRIBOT_MAX_SPEED
+    current_velocity = direction*ENEMY_MOVE_SPEED

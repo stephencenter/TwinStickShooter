@@ -28,19 +28,19 @@ onready var bullet_scene = load("res://Scenes/Ingame/Player/Bullet.tscn")
 onready var collection_radius : Area2D = $CollectionRadius
 onready var joy_crosshair : Sprite = $Crosshair
 
-onready var pfire_timer = timer_class.new([the_game.GameState.INGAME], the_game)
-onready var iframes_timer = timer_class.new([the_game.GameState.INGAME], the_game)
-onready var flicker_timer = timer_class.new([the_game.GameState.INGAME], the_game)
-onready var dash_active_timer = timer_class.new([the_game.GameState.INGAME], the_game)
-onready var dash_cd_timer = timer_class.new([the_game.GameState.INGAME], the_game)
-onready var parry_active_timer = timer_class.new([the_game.GameState.INGAME], the_game)
-onready var parry_cd_timer = timer_class.new([the_game.GameState.INGAME], the_game)
+onready var pfire_timer = timer_class.new(ACTIVE_STATES, the_game)
+onready var iframes_timer = timer_class.new(ACTIVE_STATES, the_game)
+onready var flicker_timer = timer_class.new(ACTIVE_STATES, the_game)
+onready var dash_active_timer = timer_class.new(ACTIVE_STATES, the_game)
+onready var dash_cd_timer = timer_class.new(ACTIVE_STATES, the_game)
+onready var parry_active_timer = timer_class.new(ACTIVE_STATES, the_game)
+onready var parry_cd_timer = timer_class.new(ACTIVE_STATES, the_game)
 
 onready var powerup_timers = {
-    0: timer_class.new([the_game.GameState.INGAME], the_game),
-    1: timer_class.new([the_game.GameState.INGAME], the_game),
-    2: timer_class.new([the_game.GameState.INGAME], the_game),
-    3: timer_class.new([the_game.GameState.INGAME], the_game)
+    0: timer_class.new(ACTIVE_STATES, the_game),
+    1: timer_class.new(ACTIVE_STATES, the_game),
+    2: timer_class.new(ACTIVE_STATES, the_game),
+    3: timer_class.new(ACTIVE_STATES, the_game)
 }
 
 var current_velocity : Vector2
